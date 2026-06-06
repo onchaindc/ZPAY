@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ConnectButton from "@/components/ConnectButton";
+import NetworkSelector from "@/components/NetworkSelector";
+import ZamapayLogo from "@/components/ZamapayLogo";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -15,13 +17,14 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-midnight/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-zama-gold/10 bg-midnight/85 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
         <div className="flex items-center justify-between gap-4">
-          <Link href="/" className="text-xl font-black tracking-normal text-lavender">
-            ZAMAPAY
+          <Link href="/" aria-label="ZAMAPAY home">
+            <ZamapayLogo compact />
           </Link>
-          <div className="lg:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
+            <NetworkSelector />
             <ConnectButton compact />
           </div>
         </div>
@@ -37,8 +40,8 @@ export default function Navbar() {
                   href={link.href}
                   className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
                     active
-                      ? "bg-zama/25 text-white"
-                      : "text-violet-100/72 hover:bg-white/8 hover:text-white"
+                      ? "bg-zama-gold/18 text-zama-gold"
+                      : "text-zinc-300 hover:bg-white/8 hover:text-white"
                   }`}
                 >
                   {link.label}
@@ -46,7 +49,8 @@ export default function Navbar() {
               );
             })}
           </div>
-          <div className="hidden lg:block">
+          <div className="hidden items-center gap-3 lg:flex">
+            <NetworkSelector />
             <ConnectButton compact />
           </div>
         </div>

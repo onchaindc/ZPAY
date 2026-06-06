@@ -37,12 +37,12 @@ export default function BalanceCard() {
     <section className="glass rounded-lg p-5 sm:p-6">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-normal text-lavender">Your Balance</p>
+          <p className="text-sm font-semibold uppercase tracking-normal text-zama-soft">Your Balance</p>
           <div className="mt-3 flex items-end gap-3">
             <span className="text-4xl font-black text-white sm:text-5xl">
               {balance ? balance : "••••"}
             </span>
-            <span className="pb-1 text-sm font-semibold text-violet-100/60">ZAMA</span>
+            <span className="pb-1 text-sm font-semibold text-zinc-400">ZAMA</span>
           </div>
         </div>
         <button type="button" onClick={revealBalance} disabled={loading} className="secondary-button">

@@ -65,12 +65,12 @@ export default function SendForm({ compact = false }: SendFormProps) {
   return (
     <section className={`glass rounded-lg ${compact ? "p-5" : "p-5 sm:p-6"}`}>
       <div className="mb-5">
-        <p className="text-sm font-semibold uppercase tracking-normal text-lavender">Private Transfer</p>
+        <p className="text-sm font-semibold uppercase tracking-normal text-zama-soft">Private Transfer</p>
         <h2 className="mt-2 text-2xl font-black text-white">Send encrypted tokens</h2>
       </div>
 
       <div className="grid gap-4">
-        <label className="grid gap-2 text-sm font-semibold text-violet-50">
+        <label className="grid gap-2 text-sm font-semibold text-white">
           Recipient
           <input
             value={recipient}
@@ -80,7 +80,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
           />
         </label>
 
-        <label className="grid gap-2 text-sm font-semibold text-violet-50">
+        <label className="grid gap-2 text-sm font-semibold text-white">
           Amount
           <input
             value={amount}
@@ -94,16 +94,16 @@ export default function SendForm({ compact = false }: SendFormProps) {
         <button
           type="button"
           onClick={() => setGenerateReceipt((current) => !current)}
-          className="flex items-center justify-between rounded-lg border border-lavender/25 bg-white/5 px-4 py-3 text-left"
+          className="flex items-center justify-between rounded-lg border border-zama-gold/25 bg-white/5 px-4 py-3 text-left"
           aria-pressed={generateReceipt}
         >
           <span>
             <span className="block font-semibold text-white">Generate receipt</span>
-            <span className="text-sm text-violet-100/62">Authorized parties can reveal the amount later.</span>
+            <span className="text-sm text-zinc-400">Authorized parties can reveal the amount later.</span>
           </span>
           <span
             className={`flex h-7 w-12 items-center rounded-full p-1 transition ${
-              generateReceipt ? "bg-zama" : "bg-white/12"
+              generateReceipt ? "bg-zama-gold" : "bg-white/12"
             }`}
           >
             <span

@@ -55,7 +55,7 @@ export default function ReceiptsPage() {
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-bold uppercase tracking-normal text-lavender">Receipts</p>
+          <p className="text-sm font-bold uppercase tracking-normal text-zama-soft">Receipts</p>
           <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">Selective receipt vault</h1>
         </div>
         <button type="button" onClick={loadReceipts} disabled={loading} className="primary-button">

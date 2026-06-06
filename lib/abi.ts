@@ -1,5 +1,26 @@
 export const ZAMAPAY_ABI = [
   {
+    type: "event",
+    name: "Transfer",
+    anonymous: false,
+    inputs: [
+      { name: "from", type: "address", indexed: true },
+      { name: "to", type: "address", indexed: true },
+      { name: "encryptedAmount", type: "bytes32", indexed: false }
+    ]
+  },
+  {
+    type: "event",
+    name: "TransferWithReceipt",
+    anonymous: false,
+    inputs: [
+      { name: "from", type: "address", indexed: true },
+      { name: "to", type: "address", indexed: true },
+      { name: "receiptId", type: "bytes32", indexed: true },
+      { name: "encryptedAmount", type: "bytes32", indexed: false }
+    ]
+  },
+  {
     type: "function",
     name: "transferWithReceipt",
     stateMutability: "nonpayable",

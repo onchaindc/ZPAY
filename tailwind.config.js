@@ -9,14 +9,18 @@ const config = {
     extend: {
       colors: {
         midnight: "#05070d",
-        zama: "#6d28d9",
-        lavender: "#a78bfa"
+        zama: "#facc15",
+        "zama-gold": "#facc15",
+        "zama-soft": "#fde68a",
+        "zama-ink": "#111111",
+        lavender: "#fde68a"
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
       },
       boxShadow: {
-        glow: "0 0 50px rgba(109, 40, 217, 0.24)"
+        glow: "0 0 50px rgba(250, 204, 21, 0.24)",
+        gold: "0 0 34px rgba(250, 204, 21, 0.35)"
       }
     }
   },

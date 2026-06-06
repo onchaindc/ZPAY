@@ -43,13 +43,13 @@ export default function FaucetPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-7">
-        <p className="text-sm font-bold uppercase tracking-normal text-lavender">Faucet</p>
+        <p className="text-sm font-bold uppercase tracking-normal text-zama-soft">Faucet</p>
         <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">Get Sepolia test tokens</h1>
       </div>
 
       <section className="glass rounded-lg p-5 sm:p-6">
         <div className="grid gap-4">
-          <label className="grid gap-2 text-sm font-semibold text-violet-50">
+          <label className="grid gap-2 text-sm font-semibold text-white">
             Amount
             <input
               value={amount}

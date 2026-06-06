@@ -1,6 +1,12 @@
 import { BrowserProvider, Contract, JsonRpcSigner } from "ethers";
 import { ZAMAPAY_ABI } from "@/lib/abi";
-import { SEPOLIA, SEPOLIA_CHAIN_ID_HEX, ZAMAPAY_CONTRACT } from "@/lib/constants";
+import {
+  DEFAULT_NETWORK,
+  NETWORK_STORAGE_KEY,
+  NETWORKS,
+  NetworkKey,
+  toHexChainId
+} from "@/lib/constants";
 
 declare global {
   interface Window {
@@ -20,15 +26,36 @@ export function truncateAddress(address: string) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export async function switchToSepolia() {
+export function getSelectedNetworkKey(): NetworkKey {
+  if (typeof window === "undefined") {
+    return DEFAULT_NETWORK;
+  }
+
+  const stored = window.localStorage.getItem(NETWORK_STORAGE_KEY) as NetworkKey | null;
+  return stored && stored in NETWORKS ? stored : DEFAULT_NETWORK;
+}
+
+export function setSelectedNetworkKey(networkKey: NetworkKey) {
+  window.localStorage.setItem(NETWORK_STORAGE_KEY, networkKey);
+  window.dispatchEvent(new CustomEvent("zamapay:network", { detail: networkKey }));
+}
+
+export function getSelectedNetwork() {
+  return NETWORKS[getSelectedNetworkKey()];
+}
+
+export async function switchToNetwork(networkKey: NetworkKey) {
   if (!window.ethereum) {
     throw new Error("MetaMask is required.");
   }
 
+  const network = NETWORKS[networkKey];
+  const chainId = toHexChainId(network.chainId);
+
   try {
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: SEPOLIA_CHAIN_ID_HEX }]
+      params: [{ chainId }]
     });
   } catch (error) {
     const switchError = error as { code?: number };
@@ -41,15 +68,17 @@ export async function switchToSepolia() {
       method: "wallet_addEthereumChain",
       params: [
         {
-          chainId: SEPOLIA.chainIdHex,
-          chainName: SEPOLIA.chainName,
-          nativeCurrency: SEPOLIA.nativeCurrency,
-          rpcUrls: SEPOLIA.rpcUrls,
-          blockExplorerUrls: SEPOLIA.blockExplorerUrls
+          chainId,
+          chainName: network.name,
+          nativeCurrency: network.nativeCurrency,
+          rpcUrls: [network.rpcUrl],
+          blockExplorerUrls: network.blockExplorerUrls
         }
       ]
     });
   }
+
+  setSelectedNetworkKey(networkKey);
 }
 
 export async function getBrowserProvider() {
@@ -59,9 +88,10 @@ export async function getBrowserProvider() {
 
   const provider = new BrowserProvider(window.ethereum);
   const network = await provider.getNetwork();
+  const selectedNetwork = getSelectedNetwork();
 
-  if (network.chainId !== BigInt(SEPOLIA.chainId)) {
-    await switchToSepolia();
+  if (network.chainId !== BigInt(selectedNetwork.chainId)) {
+    await switchToNetwork(getSelectedNetworkKey());
   }
 
   return new BrowserProvider(window.ethereum);
@@ -80,5 +110,5 @@ export async function connectWallet() {
 }
 
 export function getZamapayContract(signerOrProvider: JsonRpcSigner | BrowserProvider) {
-  return new Contract(ZAMAPAY_CONTRACT, ZAMAPAY_ABI, signerOrProvider);
+  return new Contract(getSelectedNetwork().contractAddress, ZAMAPAY_ABI, signerOrProvider);
 }

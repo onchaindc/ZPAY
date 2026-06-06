@@ -12,7 +12,7 @@ export async function getFhevmInstance() {
 
   const instance = await createInstance({
     kmsContractAddress: "0x208De73316E44722e16f6dDFF40881A3e4F86104",
-    aclContractAddress: "0xFee8407e2f5e3Ee68ad77cAE98c434e637f516EC",
+    aclContractAddress: "0xfee8407e2f5e3ee68ad77cae98c434e637f516ec",
     network: window.ethereum,
     gatewayUrl: "https://gateway.sepolia.zama.ai/",
   });

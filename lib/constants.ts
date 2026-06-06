@@ -13,7 +13,7 @@ export const NETWORKS = {
     name: "Sepolia Testnet",
     rpcUrl: "https://rpc.sepolia.org",
     kmsContractAddress: "0x208De73316E44722e16f6dDFF40881A3e4F86104",
-    aclContractAddress: "0xFee8407e2f5e3Ee68ad77cAE98c434e637f516EC",
+    aclContractAddress: "0xfee8407e2f5e3ee68ad77cae98c434e637f516ec",
     gatewayUrl: "https://gateway.sepolia.zama.ai/",
     contractAddress: ZAMAPAY_CONTRACT_SEPOLIA,
     nativeCurrency: {
@@ -28,7 +28,7 @@ export const NETWORKS = {
     name: "Ethereum Mainnet",
     rpcUrl: "https://eth.llamarpc.com",
     kmsContractAddress: "0x208De73316E44722e16f6dDFF40881A3e4F86104",
-    aclContractAddress: "0xFee8407e2f5e3Ee68ad77cAE98c434e637f516EC",
+    aclContractAddress: "0xfee8407e2f5e3ee68ad77cae98c434e637f516ec",
     gatewayUrl: "https://gateway.main.zama.ai/",
     contractAddress: ZAMAPAY_CONTRACT_MAINNET,
     nativeCurrency: {

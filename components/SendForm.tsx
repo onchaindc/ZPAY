@@ -11,6 +11,11 @@ type SendFormProps = {
   compact?: boolean;
 };
 
+type EncryptedPayload = {
+  handles: unknown[];
+  inputProof: unknown;
+};
+
 export default function SendForm({ compact = false }: SendFormProps) {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
@@ -43,11 +48,13 @@ export default function SendForm({ compact = false }: SendFormProps) {
       const contract = getZamapayContract(wallet.signer);
       const fhevm = await getFhevmInstance();
       const encrypted = await fhevm.encrypt64(BigInt(amount));
+      const hasPayload =
+        encrypted && typeof encrypted === "object" && "handles" in encrypted && "inputProof" in encrypted;
       const { encryptedAmount, inputProof } =
-        encrypted && typeof encrypted === "object" && "handles" in encrypted && "inputProof" in encrypted
+        hasPayload
           ? {
-              encryptedAmount: encrypted.handles[0],
-              inputProof: encrypted.inputProof
+              encryptedAmount: (encrypted as EncryptedPayload).handles[0],
+              inputProof: (encrypted as EncryptedPayload).inputProof
             }
           : {
               encryptedAmount: encrypted,

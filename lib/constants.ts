@@ -27,8 +27,8 @@ export const NETWORKS = {
     chainId: 1,
     name: "Ethereum Mainnet",
     rpcUrl: "https://eth.llamarpc.com",
-    kmsContractAddress: "0x9D6AdBa497Cef4232d97e9a05F4AEB0b96a26Cc3",
-    aclContractAddress: "0xa2073A7558F8A432f645eaA5D0e54E3D8839c1b4",
+    kmsContractAddress: "0x208De73316E44722e16f6dDFF40881A3e4F86104",
+    aclContractAddress: "0xFee8407e2f5e3Ee68ad77cAE98c434e637f516EC",
     gatewayUrl: "https://gateway.main.zama.ai/",
     contractAddress: ZAMAPAY_CONTRACT_MAINNET,
     nativeCurrency: {

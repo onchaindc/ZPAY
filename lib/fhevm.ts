@@ -19,7 +19,7 @@ export async function getFhevmInstance() {
     chainId: 11155111,
     gatewayChainId: 55815,
     network: "https://ethereum-sepolia-rpc.publicnode.com",
-    relayerUrl: "https://relayer.testnet.zama.cloud",
+    relayerUrl: "https://relayer.testnet.zama.org",
   }) as unknown) as FhevmInstance;
 
   return instance;

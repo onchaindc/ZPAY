@@ -1,88 +1,21 @@
 export const ZAMAPAY_ABI = [
-  {
-    type: "event",
-    name: "Transfer",
-    anonymous: false,
-    inputs: [
-      { name: "from", type: "address", indexed: true },
-      { name: "to", type: "address", indexed: true },
-      { name: "encryptedAmount", type: "bytes32", indexed: false }
-    ]
-  },
-  {
-    type: "event",
-    name: "TransferWithReceipt",
-    anonymous: false,
-    inputs: [
-      { name: "from", type: "address", indexed: true },
-      { name: "to", type: "address", indexed: true },
-      { name: "receiptId", type: "bytes32", indexed: true },
-      { name: "encryptedAmount", type: "bytes32", indexed: false }
-    ]
-  },
-  {
-    type: "function",
-    name: "transferWithReceipt",
-    stateMutability: "nonpayable",
-    inputs: [
-      { name: "to", type: "address" },
-      { name: "encryptedAmount", type: "bytes" },
-      { name: "inputProof", type: "bytes" }
-    ],
-    outputs: []
-  },
-  {
-    type: "function",
-    name: "transfer",
-    stateMutability: "nonpayable",
-    inputs: [
-      { name: "to", type: "address" },
-      { name: "encryptedAmount", type: "bytes" },
-      { name: "inputProof", type: "bytes" }
-    ],
-    outputs: []
-  },
-  {
-    type: "function",
-    name: "balanceOf",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ name: "", type: "bytes32" }]
-  },
-  {
-    type: "function",
-    name: "mint",
-    stateMutability: "nonpayable",
-    inputs: [
-      { name: "to", type: "address" },
-      { name: "amount", type: "uint64" }
-    ],
-    outputs: []
-  },
-  {
-    type: "function",
-    name: "getReceipt",
-    stateMutability: "view",
-    inputs: [{ name: "receiptId", type: "bytes32" }],
-    outputs: [
-      { name: "sender", type: "address" },
-      { name: "receiver", type: "address" },
-      { name: "amount", type: "bytes32" },
-      { name: "timestamp", type: "uint256" }
-    ]
-  },
-  {
-    type: "function",
-    name: "getSentReceipts",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ name: "", type: "bytes32[]" }]
-  },
-  {
-    type: "function",
-    name: "getReceivedReceipts",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ name: "", type: "bytes32[]" }]
-  }
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }], "name": "OwnableInvalidOwner", "type": "error" },
+  { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }], "name": "OwnableUnauthorizedAccount", "type": "error" },
+  { "inputs": [{ "internalType": "bytes32", "name": "handle", "type": "bytes32" }, { "internalType": "address", "name": "sender", "type": "address" }], "name": "SenderNotAllowedToUseHandle", "type": "error" },
+  { "inputs": [], "name": "ZamaProtocolUnsupported", "type": "error" },
+  { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }], "name": "OwnershipTransferred", "type": "event" },
+  { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "from", "type": "address" }, { "indexed": true, "internalType": "address", "name": "to", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }], "name": "Transfer", "type": "event" },
+  { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "sender", "type": "address" }, { "indexed": true, "internalType": "address", "name": "receiver", "type": "address" }, { "indexed": false, "internalType": "bytes32", "name": "receiptId", "type": "bytes32" }, { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }], "name": "TransferWithReceipt", "type": "event" },
+  { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "euint64", "name": "", "type": "bytes32" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "confidentialProtocolId", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "internalType": "bytes32", "name": "receiptId", "type": "bytes32" }], "name": "getReceipt", "outputs": [{ "internalType": "address", "name": "sender", "type": "address" }, { "internalType": "address", "name": "receiver", "type": "address" }, { "internalType": "euint64", "name": "encryptedAmount", "type": "bytes32" }, { "internalType": "uint256", "name": "timestamp", "type": "uint256" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "user", "type": "address" }], "name": "getReceivedReceipts", "outputs": [{ "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "user", "type": "address" }], "name": "getSentReceipts", "outputs": [{ "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint64", "name": "amount", "type": "uint64" }], "name": "mint", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [], "name": "owner", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "to", "type": "address" }, { "internalType": "externalEuint64", "name": "encryptedAmount", "type": "bytes32" }, { "internalType": "bytes", "name": "inputProof", "type": "bytes" }], "name": "transfer", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }], "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "to", "type": "address" }, { "internalType": "externalEuint64", "name": "encryptedAmount", "type": "bytes32" }, { "internalType": "bytes", "name": "inputProof", "type": "bytes" }], "name": "transferWithReceipt", "outputs": [{ "internalType": "bytes32", "name": "receiptId", "type": "bytes32" }], "stateMutability": "nonpayable", "type": "function" }
 ] as const;

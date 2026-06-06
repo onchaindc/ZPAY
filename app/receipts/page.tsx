@@ -34,7 +34,7 @@ export default function ReceiptsPage() {
             id,
             sender: receipt.sender,
             receiver: receipt.receiver,
-            encryptedAmount: receipt.amount,
+            encryptedAmount: receipt.encryptedAmount,
             timestamp: Number(receipt.timestamp)
           };
         })

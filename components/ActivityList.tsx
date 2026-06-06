@@ -48,8 +48,8 @@ export default function ActivityList() {
       const rows = await Promise.all(
         uniqueEvents.map(async (event) => {
           const block = await wallet.provider.getBlock(event.blockNumber);
-          const from = String(event.args.from);
-          const to = String(event.args.to);
+          const from = String(event.args.from ?? event.args.sender);
+          const to = String(event.args.to ?? event.args.receiver);
           const outgoing = from.toLowerCase() === wallet.address.toLowerCase();
           const withReceipt = event.eventName === "TransferWithReceipt";
 

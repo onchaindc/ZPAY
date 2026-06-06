@@ -8,10 +8,6 @@ let instance: FhevmInstance | null = null;
 export async function getFhevmInstance() {
   if (instance) return instance;
 
-  if (!window.ethereum) {
-    throw new Error("MetaMask is required.");
-  }
-
   const { createInstance } = await import("@zama-fhe/relayer-sdk/web");
 
   instance = (await createInstance({
@@ -22,7 +18,7 @@ export async function getFhevmInstance() {
     verifyingContractAddressInputVerification: "0x7048C39f048125eDa9d678AEbaDfB22F7900a29F",
     chainId: 11155111,
     gatewayChainId: 55815,
-    network: window.ethereum,
+    network: "https://ethereum-sepolia-rpc.publicnode.com",
     relayerUrl: "https://relayer.testnet.zama.cloud",
   }) as unknown) as FhevmInstance;
 

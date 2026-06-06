@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  background: #05070d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(109, 40, 217, 0.2), transparent 34rem),
+    radial-gradient(circle at 90% 10%, rgba(167, 139, 250, 0.14), transparent 32rem),
+    #05070d;
+  color: #f7f3ff;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+@layer components {
+  .glass {
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    background: rgba(12, 15, 28, 0.68);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(18px);
+  }
+
+  .input-field {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(167, 139, 250, 0.22);
+    background: rgba(5, 7, 13, 0.74);
+    padding: 0.85rem 1rem;
+    color: #fff;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .input-field:focus {
+    border-color: rgba(167, 139, 250, 0.8);
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.18);
+  }
+
+  .primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    border-radius: 8px;
+    background: #6d28d9;
+    padding: 0.75rem 1rem;
+    color: #fff;
+    font-weight: 700;
+    transition: transform 160ms ease, background 160ms ease, opacity 160ms ease;
+  }
+
+  .primary-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: #7c3aed;
+  }
+
+  .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(167, 139, 250, 0.24);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.65rem 0.9rem;
+    color: #f7f3ff;
+    font-weight: 700;
+    transition: border-color 160ms ease, background 160ms ease;
+  }
+
+  .secondary-button:hover:not(:disabled) {
+    border-color: rgba(167, 139, 250, 0.55);
+    background: rgba(167, 139, 250, 0.12);
+  }
+}

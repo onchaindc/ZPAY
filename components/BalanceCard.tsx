@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { connectWallet, getZamapayContract } from "@/lib/contract";
-import { decryptValue } from "@/lib/fhevm";
+import { getFhevmInstance } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 
@@ -21,7 +21,9 @@ export default function BalanceCard() {
       const wallet = await connectWallet();
       const contract = getZamapayContract(wallet.signer);
       const encryptedBalance = await contract.balanceOf(wallet.address);
-      const decryptedBalance = await decryptValue(encryptedBalance);
+      const fhevm = await getFhevmInstance();
+      const value = await fhevm.decrypt(encryptedBalance);
+      const decryptedBalance = value?.toString?.() ?? String(value);
       setBalance(decryptedBalance);
       setToast("Balance revealed locally.");
       setTone("success");

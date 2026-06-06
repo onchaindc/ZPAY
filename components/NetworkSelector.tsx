@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { DEFAULT_NETWORK, NETWORKS, NetworkKey } from "@/lib/constants";
 import { getSelectedNetworkKey, switchToNetwork } from "@/lib/contract";
-import { resetFhevmInstance } from "@/lib/fhevm";
+import { resetInstance } from "@/lib/fhevm";
 
 export default function NetworkSelector() {
   const [networkKey, setNetworkKey] = useState<NetworkKey>(DEFAULT_NETWORK);
@@ -19,7 +19,7 @@ export default function NetworkSelector() {
 
     try {
       await switchToNetwork(nextNetwork);
-      resetFhevmInstance();
+      resetInstance();
     } finally {
       setLoading(false);
     }

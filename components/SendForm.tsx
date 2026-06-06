@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { isAddress } from "ethers";
 import { connectWallet, getZamapayContract, truncateAddress } from "@/lib/contract";
-import { encrypt64 } from "@/lib/fhevm";
+import { getFhevmInstance } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 
@@ -41,7 +41,18 @@ export default function SendForm({ compact = false }: SendFormProps) {
     try {
       const wallet = await connectWallet();
       const contract = getZamapayContract(wallet.signer);
-      const { encryptedAmount, inputProof } = await encrypt64(amount);
+      const fhevm = await getFhevmInstance();
+      const encrypted = await fhevm.encrypt64(BigInt(amount));
+      const { encryptedAmount, inputProof } =
+        encrypted && typeof encrypted === "object" && "handles" in encrypted && "inputProof" in encrypted
+          ? {
+              encryptedAmount: encrypted.handles[0],
+              inputProof: encrypted.inputProof
+            }
+          : {
+              encryptedAmount: encrypted,
+              inputProof: "0x"
+            };
       setToast(generateReceipt ? "Sending private transfer with receipt..." : "Sending private transfer...");
 
       const tx = generateReceipt

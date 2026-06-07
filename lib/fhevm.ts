@@ -8,7 +8,9 @@ let instance: FhevmInstance | null = null;
 export async function getFhevmInstance() {
   if (instance) return instance;
 
-  const { createInstance } = await import("@zama-fhe/relayer-sdk/web");
+  const { initSDK, createInstance } = await import("@zama-fhe/relayer-sdk/web");
+
+  await initSDK();
 
   instance = (await createInstance({
     aclContractAddress: "0x687820221192C5B662b25367F70076A37bc79b6c",

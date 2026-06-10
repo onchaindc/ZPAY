@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { connectWallet, getSelectedContractAddress, getZamapayContract } from "@/lib/contract";
-import { userDecryptHandle } from "@/lib/fhevm";
+import { connectWallet, getZamapayContract } from "@/lib/contract";
+import { userDecryptBalanceHandle } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 
@@ -20,9 +20,9 @@ export default function BalanceCard() {
     try {
       const wallet = await connectWallet();
       const contract = getZamapayContract(wallet.signer);
-      const contractAddress = getSelectedContractAddress();
-      const encryptedBalance = await contract.balanceOf(wallet.address);
-      const value = await userDecryptHandle(contractAddress, wallet.address, encryptedBalance, wallet.signer);
+      const userAddress = await wallet.signer.getAddress();
+      const handle = await contract.balanceOf(userAddress);
+      const value = await userDecryptBalanceHandle(userAddress, handle, wallet.signer);
       const decryptedBalance = value?.toString?.() ?? String(value);
       setBalance(decryptedBalance);
       setToast("Balance revealed locally.");

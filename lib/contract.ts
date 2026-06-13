@@ -135,3 +135,15 @@ export function getZamapayContract(signerOrProvider: JsonRpcSigner | BrowserProv
   assertConfiguredContractAddress();
   return new Contract(getSelectedContractAddress(), ZAMAPAY_ABI, signerOrProvider);
 }
+
+export async function getConnectedNetworkName() {
+  if (!window.ethereum) {
+    return getSelectedNetwork().name;
+  }
+
+  const provider = new BrowserProvider(window.ethereum);
+  const network = await provider.getNetwork();
+  const matched = Object.values(NETWORKS).find((candidate) => BigInt(candidate.chainId) === network.chainId);
+
+  return matched?.name ?? getSelectedNetwork().name;
+}

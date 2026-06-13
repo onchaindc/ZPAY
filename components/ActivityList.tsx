@@ -41,10 +41,12 @@ export default function ActivityList() {
         const signer = await provider.getSigner(userAddress);
         const contract = getZamapayContract(signer);
         const events = await Promise.all([
-          contract.queryFilter(contract.filters.Transfer(userAddress, null)),
-          contract.queryFilter(contract.filters.Transfer(null, userAddress)),
-          contract.queryFilter(contract.filters.TransferWithReceipt(userAddress, null, null)),
-          contract.queryFilter(contract.filters.TransferWithReceipt(null, userAddress, null)),
+          contract.queryFilter(contract.filters.Deposit(userAddress, null, null)),
+          contract.queryFilter(contract.filters.Withdrawal(userAddress, null, null)),
+          contract.queryFilter(contract.filters.PrivateTransfer(userAddress, null, null)),
+          contract.queryFilter(contract.filters.PrivateTransfer(null, userAddress, null)),
+          contract.queryFilter(contract.filters.PrivateTransferWithReceipt(userAddress, null, null, null)),
+          contract.queryFilter(contract.filters.PrivateTransferWithReceipt(null, userAddress, null, null)),
         ]);
 
         const uniqueEvents = Array.from(
@@ -59,16 +61,26 @@ export default function ActivityList() {
         const rows = await Promise.all(
           uniqueEvents.map(async (event) => {
             const block = await provider.getBlock(event.blockNumber);
-            const from = String(event.args.from ?? event.args.sender);
-            const to = String(event.args.to ?? event.args.receiver);
+            const from = String(event.args.from ?? event.args.sender ?? event.args.account ?? userAddress);
+            const to = String(event.args.to ?? event.args.receiver ?? event.args.account ?? userAddress);
             const outgoing = from.toLowerCase() === userAddress.toLowerCase();
-            const withReceipt = event.eventName === "TransferWithReceipt";
+            const label =
+              event.eventName === "Deposit"
+                ? "Deposit"
+                : event.eventName === "Withdrawal"
+                  ? "Withdraw"
+                  : `${outgoing ? "Sent" : "Received"}${event.eventName === "PrivateTransferWithReceipt" ? " with receipt" : ""}`;
 
             return {
               id: `${event.transactionHash}-${event.index}`,
-              address: outgoing ? to : from,
+              address:
+                event.eventName === "Deposit" || event.eventName === "Withdrawal"
+                  ? userAddress
+                  : outgoing
+                    ? to
+                    : from,
               timestamp: block?.timestamp ?? 0,
-              label: `${outgoing ? "Sent" : "Received"}${withReceipt ? " with receipt" : ""}`,
+              label,
             };
           })
         );
@@ -88,17 +100,17 @@ export default function ActivityList() {
 
     void loadActivity();
 
-    const handleAccountsChanged = () => {
+    const handleWalletStateChange = () => {
       void loadActivity();
     };
 
-    window.ethereum?.on?.("accountsChanged", handleAccountsChanged);
-    window.ethereum?.on?.("chainChanged", handleAccountsChanged);
+    window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
+    window.ethereum?.on?.("chainChanged", handleWalletStateChange);
 
     return () => {
       active = false;
-      window.ethereum?.removeListener?.("accountsChanged", handleAccountsChanged);
-      window.ethereum?.removeListener?.("chainChanged", handleAccountsChanged);
+      window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
+      window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
     };
   }, []);
 
@@ -106,7 +118,7 @@ export default function ActivityList() {
     <section className="glass rounded-xl p-4 sm:p-6">
       <div className="mb-5">
         <p className="text-xs font-semibold uppercase tracking-normal text-zama-soft sm:text-sm">Recent Activity</p>
-        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Encrypted transfers</h2>
+        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Private ETH movements</h2>
       </div>
 
       {activity.length ? (
@@ -124,7 +136,7 @@ export default function ActivityList() {
         <div className="rounded-xl border border-white/8 bg-white/4 px-4 py-8 text-center sm:px-5">
           <p className="font-black text-white">No transfers yet</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Your private activity will appear here after the connected wallet sends or receives ZPAY tokens.
+            Your private ETH deposits, transfers, and withdrawals will appear here.
           </p>
         </div>
       )}

@@ -62,7 +62,7 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
         </div>
         <div className="text-left sm:text-right">
           <p className="text-2xl font-black text-white">{amount || "\u2022\u2022\u2022\u2022"}</p>
-          <p className="text-xs font-semibold text-zinc-400">ZPAY</p>
+          <p className="text-xs font-semibold text-zinc-400">ETH</p>
         </div>
       </div>
 

@@ -1,3 +1,5 @@
+import { formatEther, parseEther } from "ethers";
+
 export function getFriendlyErrorMessage(
   error: unknown,
   fallback: "network" | "contract" | "generic" = "generic"
@@ -49,4 +51,30 @@ export function getFriendlyErrorMessage(
   }
 
   return "Something went wrong. Please try again.";
+}
+
+export function parseEthAmount(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    const wei = parseEther(trimmed);
+    return wei > BigInt(0) ? wei : null;
+  } catch {
+    return null;
+  }
+}
+
+export function formatEthAmount(value: bigint | string) {
+  const normalized = typeof value === "string" ? BigInt(value) : value;
+  const formatted = formatEther(normalized);
+
+  if (!formatted.includes(".")) {
+    return formatted;
+  }
+
+  return formatted.replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
 }

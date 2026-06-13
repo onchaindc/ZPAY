@@ -57,7 +57,7 @@ export default function ReceiptsPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-normal text-zama-soft sm:text-sm">Receipts</p>
-          <h1 className="mt-2 text-2xl font-black text-white sm:text-4xl">Selective receipt vault</h1>
+          <h1 className="mt-2 text-2xl font-black text-white sm:text-4xl">Private payment receipts</h1>
         </div>
         <button type="button" onClick={loadReceipts} disabled={loading} className="primary-button sm:w-auto">
           {loading ? <LoadingSpinner className="mr-2" /> : null}

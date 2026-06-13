@@ -6,7 +6,7 @@ import { connectWallet, getSelectedContractAddress, getZamapayContract, truncate
 import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import { getFriendlyErrorMessage } from "@/lib/ui";
+import { formatEthAmount, getFriendlyErrorMessage, parseEthAmount } from "@/lib/ui";
 
 type SendFormProps = {
   compact?: boolean;
@@ -30,29 +30,32 @@ export default function SendForm({ compact = false }: SendFormProps) {
       return;
     }
 
-    if (!amount || Number(amount) <= 0 || !Number.isInteger(Number(amount))) {
-      setToast("Enter a whole token amount greater than zero.");
+    const parsedAmount = parseEthAmount(amount);
+
+    if (!parsedAmount) {
+      setToast("Enter a valid ETH amount greater than zero.");
       setTone("error");
       return;
     }
 
     setLoading(true);
-    setToast("Encrypting amount locally...");
+    setToast("Encrypting ETH amount locally...");
 
     try {
       const wallet = await connectWallet();
       const contract = getZamapayContract(wallet.signer);
       const contractAddress = getSelectedContractAddress();
-      const { encryptedAmount, inputProof } = await encryptAmount64(contractAddress, wallet.address, amount);
-      setToast(generateReceipt ? "Sending private transfer with receipt..." : "Sending private transfer...");
+      const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
+      const displayAmount = formatEthAmount(parsedAmount);
+      setToast(generateReceipt ? `Sending ${displayAmount} ETH privately with receipt...` : `Sending ${displayAmount} ETH privately...`);
 
       const tx = generateReceipt
-        ? await contract.transferWithReceipt(recipient, encryptedAmount, inputProof)
-        : await contract.transfer(recipient, encryptedAmount, inputProof);
+        ? await contract.privateTransferWithReceipt(recipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof)
+        : await contract.privateTransfer(recipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof);
 
       setToast(`Transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
-      setToast("Transfer confirmed.");
+      setToast("Private transfer confirmed.");
       setTone("success");
       setRecipient("");
       setAmount("");
@@ -68,7 +71,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
     <section className={`glass rounded-xl ${compact ? "p-4 sm:p-6" : "p-4 sm:p-6"}`}>
       <div className="mb-5">
         <p className="text-xs font-semibold uppercase tracking-normal text-zama-soft sm:text-sm">Private Transfer</p>
-        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Send encrypted tokens</h2>
+        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Send encrypted ETH</h2>
       </div>
 
       <div className="grid gap-4">
@@ -83,12 +86,12 @@ export default function SendForm({ compact = false }: SendFormProps) {
         </label>
 
         <label className="grid gap-2 text-sm font-semibold text-white">
-          Amount
+          Amount (ETH)
           <input
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
-            inputMode="numeric"
-            placeholder="100"
+            inputMode="decimal"
+            placeholder="0.05"
             className="input-field"
           />
         </label>
@@ -101,7 +104,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
         >
           <span className="min-w-0">
             <span className="block font-semibold text-white">Generate receipt</span>
-            <span className="block text-sm text-zinc-400">Authorized parties can reveal the amount later.</span>
+            <span className="block text-sm text-zinc-400">Reveal payment details only to authorized parties.</span>
           </span>
           <span
             className={`ml-4 flex h-7 w-12 shrink-0 items-center rounded-full p-1 transition ${

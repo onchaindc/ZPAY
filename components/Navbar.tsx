@@ -11,7 +11,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/send", label: "Send" },
   { href: "/receipts", label: "Receipts" },
-  { href: "/faucet", label: "Faucet" }
+  { href: "/faucet", label: "Mint" }
 ];
 
 export default function Navbar() {

@@ -41,12 +41,10 @@ export default function ActivityList() {
         const signer = await provider.getSigner(userAddress);
         const contract = getZamapayContract(signer);
         const events = await Promise.all([
-          contract.queryFilter(contract.filters.Deposit(userAddress, null, null)),
-          contract.queryFilter(contract.filters.Withdrawal(userAddress, null, null)),
-          contract.queryFilter(contract.filters.PrivateTransfer(userAddress, null, null)),
-          contract.queryFilter(contract.filters.PrivateTransfer(null, userAddress, null)),
-          contract.queryFilter(contract.filters.PrivateTransferWithReceipt(userAddress, null, null, null)),
-          contract.queryFilter(contract.filters.PrivateTransferWithReceipt(null, userAddress, null, null)),
+          contract.queryFilter(contract.filters.Transfer(userAddress, null, null)),
+          contract.queryFilter(contract.filters.Transfer(null, userAddress, null)),
+          contract.queryFilter(contract.filters.TransferWithReceipt(userAddress, null, null, null)),
+          contract.queryFilter(contract.filters.TransferWithReceipt(null, userAddress, null, null)),
         ]);
 
         const uniqueEvents = Array.from(
@@ -61,24 +59,16 @@ export default function ActivityList() {
         const rows = await Promise.all(
           uniqueEvents.map(async (event) => {
             const block = await provider.getBlock(event.blockNumber);
-            const from = String(event.args.from ?? event.args.sender ?? event.args.account ?? userAddress);
-            const to = String(event.args.to ?? event.args.receiver ?? event.args.account ?? userAddress);
+            const from = String(event.args.from ?? event.args.sender ?? userAddress);
+            const to = String(event.args.to ?? event.args.receiver ?? userAddress);
             const outgoing = from.toLowerCase() === userAddress.toLowerCase();
-            const label =
-              event.eventName === "Deposit"
-                ? "Deposit"
-                : event.eventName === "Withdrawal"
-                  ? "Withdraw"
-                  : `${outgoing ? "Sent" : "Received"}${event.eventName === "PrivateTransferWithReceipt" ? " with receipt" : ""}`;
+            const label = `${outgoing ? "Sent" : "Received"}${
+              event.eventName === "TransferWithReceipt" ? " with receipt" : ""
+            }`;
 
             return {
               id: `${event.transactionHash}-${event.index}`,
-              address:
-                event.eventName === "Deposit" || event.eventName === "Withdrawal"
-                  ? userAddress
-                  : outgoing
-                    ? to
-                    : from,
+              address: outgoing ? to : from,
               timestamp: block?.timestamp ?? 0,
               label,
             };
@@ -118,7 +108,7 @@ export default function ActivityList() {
     <section className="glass rounded-xl p-4 sm:p-6">
       <div className="mb-5">
         <p className="text-xs font-semibold uppercase tracking-normal text-zama-soft sm:text-sm">Recent Activity</p>
-        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Private ETH movements</h2>
+        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Private transfers</h2>
       </div>
 
       {activity.length ? (
@@ -136,7 +126,7 @@ export default function ActivityList() {
         <div className="rounded-xl border border-white/8 bg-white/4 px-4 py-8 text-center sm:px-5">
           <p className="font-black text-white">No transfers yet</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Your private ETH deposits, transfers, and withdrawals will appear here.
+            Your private transfers will appear here.
           </p>
         </div>
       )}

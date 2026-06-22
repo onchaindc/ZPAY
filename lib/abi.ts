@@ -1,15 +1,13 @@
+// ABI mirrors the ZamaPay contract actually deployed on Sepolia
+// (0x3cE4bB69e2Aa72A336251064101F6a42779b132C). Every selector below was
+// verified against the on-chain bytecode — see contracts/ZamaPay.sol.
+//
+// NOTE: there is NO deposit() and NO withdraw() on-chain. Balance only enters
+// the system via the owner-only mint(). The "vault" ABI that previously lived
+// here called functions that do not exist, which is why every tx reverted.
+
 export const ZAMAPAY_ABI = [
-  { "inputs": [], "stateMutability": "payable", "type": "constructor" },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
-    ],
-    "name": "Deposit",
-    "type": "event"
-  },
+  // ---- events ----
   {
     "anonymous": false,
     "inputs": [
@@ -17,7 +15,7 @@ export const ZAMAPAY_ABI = [
       { "indexed": true, "internalType": "address", "name": "to", "type": "address" },
       { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
     ],
-    "name": "PrivateTransfer",
+    "name": "Transfer",
     "type": "event"
   },
   {
@@ -28,31 +26,47 @@ export const ZAMAPAY_ABI = [
       { "indexed": false, "internalType": "bytes32", "name": "receiptId", "type": "bytes32" },
       { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
     ],
-    "name": "PrivateTransferWithReceipt",
+    "name": "TransferWithReceipt",
     "type": "event"
   },
+  // ---- functions ----
   {
-    "anonymous": false,
     "inputs": [
-      { "indexed": true, "internalType": "address", "name": "account", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint64", "name": "amount", "type": "uint64" }
     ],
-    "name": "Withdrawal",
-    "type": "event"
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "externalEuint64", "name": "encryptedAmount", "type": "bytes32" },
+      { "internalType": "bytes", "name": "inputProof", "type": "bytes" }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "externalEuint64", "name": "encryptedAmount", "type": "bytes32" },
+      { "internalType": "bytes", "name": "inputProof", "type": "bytes" }
+    ],
+    "name": "transferWithReceipt",
+    "outputs": [{ "internalType": "bytes32", "name": "receiptId", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "balanceOf",
     "outputs": [{ "internalType": "euint64", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "deposit",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -69,45 +83,16 @@ export const ZAMAPAY_ABI = [
   },
   {
     "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
-    "name": "getReceivedReceipts",
-    "outputs": [{ "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
     "name": "getSentReceipts",
     "outputs": [{ "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "to", "type": "address" },
-      { "internalType": "externalEuint64", "name": "encryptedAmount", "type": "bytes32" },
-      { "internalType": "bytes", "name": "inputProof", "type": "bytes" }
-    ],
-    "name": "privateTransfer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "to", "type": "address" },
-      { "internalType": "externalEuint64", "name": "encryptedAmount", "type": "bytes32" },
-      { "internalType": "bytes", "name": "inputProof", "type": "bytes" }
-    ],
-    "name": "privateTransferWithReceipt",
-    "outputs": [{ "internalType": "bytes32", "name": "receiptId", "type": "bytes32" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint64", "name": "amount", "type": "uint64" }],
-    "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "getReceivedReceipts",
+    "outputs": [{ "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }],
+    "stateMutability": "view",
     "type": "function"
   }
 ] as const;

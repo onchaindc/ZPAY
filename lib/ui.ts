@@ -78,3 +78,22 @@ export function formatEthAmount(value: bigint | string) {
 
   return formatted.replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
 }
+
+// ZamaPay's _balances is an euint64 of raw tokens — no decimals. mint() and
+// transfer() both operate in these whole units, so the UI must too. Parsing as
+// ETH (18 decimals) would inflate amounts by 1e20 and silently overflow uint64.
+export function parseTokenAmount(value: string): bigint | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  try {
+    const asBigInt = BigInt(Math.floor(Number(trimmed)));
+    return asBigInt > BigInt(0) ? asBigInt : null;
+  } catch {
+    return null;
+  }
+}
+
+export function formatTokenAmount(value: bigint | string) {
+  const normalized = typeof value === "string" ? BigInt(value) : value;
+  return normalized.toString();
+}

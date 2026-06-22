@@ -34,7 +34,16 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
       const wallet = await connectWallet();
       const contractAddress = getSelectedContractAddress();
       const value = await userDecryptHandle(contractAddress, wallet.address, receipt.encryptedAmount, wallet.signer);
-      setAmount(value?.toString?.() ?? String(value));
+      const decrypted = value?.toString?.() ?? String(value);
+
+      if (!decrypted || decrypted === "0") {
+        setAmount("");
+        setToast("Amount is zero or could not be decrypted.");
+        setTone("idle");
+        return;
+      }
+
+      setAmount(decrypted);
       setToast("Amount revealed locally.");
       setTone("success");
     } catch (error) {
@@ -62,7 +71,7 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
         </div>
         <div className="text-left sm:text-right">
           <p className="text-2xl font-black text-white">{amount || "\u2022\u2022\u2022\u2022"}</p>
-          <p className="text-xs font-semibold text-zinc-400">ETH</p>
+          <p className="text-xs font-semibold text-zinc-400">tokens</p>
         </div>
       </div>
 

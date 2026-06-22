@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { isAddress } from "ethers";
+import { isAddress, type Log } from "ethers";
 import { connectWallet, getSelectedContractAddress, getZamapayContract, truncateAddress } from "@/lib/contract";
 import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import { formatEthAmount, getFriendlyErrorMessage, parseEthAmount } from "@/lib/ui";
+import { formatTokenAmount, getFriendlyErrorMessage, parseTokenAmount } from "@/lib/ui";
 
 type SendFormProps = {
   compact?: boolean;
@@ -30,32 +30,48 @@ export default function SendForm({ compact = false }: SendFormProps) {
       return;
     }
 
-    const parsedAmount = parseEthAmount(amount);
+    const parsedAmount = parseTokenAmount(amount);
 
     if (!parsedAmount) {
-      setToast("Enter a valid ETH amount greater than zero.");
+      setToast("Enter a whole number of tokens greater than zero.");
       setTone("error");
       return;
     }
 
     setLoading(true);
-    setToast("Encrypting ETH amount locally...");
+    setToast("Encrypting amount locally...");
 
     try {
       const wallet = await connectWallet();
       const contract = getZamapayContract(wallet.signer);
       const contractAddress = getSelectedContractAddress();
       const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
-      const displayAmount = formatEthAmount(parsedAmount);
-      setToast(generateReceipt ? `Sending ${displayAmount} ETH privately with receipt...` : `Sending ${displayAmount} ETH privately...`);
+      const displayAmount = formatTokenAmount(parsedAmount);
+      setToast(generateReceipt ? `Sending ${displayAmount} tokens privately with receipt...` : `Sending ${displayAmount} tokens privately...`);
 
       const tx = generateReceipt
-        ? await contract.privateTransferWithReceipt(recipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof)
-        : await contract.privateTransfer(recipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof);
+        ? await contract.transferWithReceipt(recipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof)
+        : await contract.transfer(recipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof);
 
       setToast(`Transaction submitted: ${truncateAddress(tx.hash)}`);
-      await tx.wait();
-      setToast("Private transfer confirmed.");
+      const receipt = await tx.wait();
+      // The receiptId is emitted in the TransferWithReceipt event (return values
+      // of non-view functions are not accessible off-chain).
+      const receiptEvent = receipt?.logs
+        ? (contract.interface.parseLog(receipt.logs.find((log: Log) => {
+            try {
+              return contract.interface.parseLog(log)?.name === "TransferWithReceipt";
+            } catch {
+              return false;
+            }
+          }) ?? receipt.logs[0]) ?? null)
+        : null;
+      const receiptId = (receiptEvent?.args?.receiptId as string | undefined) ?? null;
+      setToast(
+        generateReceipt && receiptId
+          ? `Private transfer confirmed. Receipt: ${truncateAddress(receiptId)}`
+          : "Private transfer confirmed."
+      );
       setTone("success");
       setRecipient("");
       setAmount("");
@@ -71,7 +87,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
     <section className={`glass rounded-xl ${compact ? "p-4 sm:p-6" : "p-4 sm:p-6"}`}>
       <div className="mb-5">
         <p className="text-xs font-semibold uppercase tracking-normal text-zama-soft sm:text-sm">Private Transfer</p>
-        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Send encrypted ETH</h2>
+        <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Send encrypted tokens</h2>
       </div>
 
       <div className="grid gap-4">
@@ -86,7 +102,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
         </label>
 
         <label className="grid gap-2 text-sm font-semibold text-white">
-          Amount (ETH)
+          Amount (tokens)
           <input
             value={amount}
             onChange={(event) => setAmount(event.target.value)}

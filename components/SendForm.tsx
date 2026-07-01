@@ -43,11 +43,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
       ? "Use a whole number of tokens greater than zero."
       : "";
 
-  const primaryActionLabel = loading
-    ? "Processing payment"
-    : successSummary
-      ? "Send another payment"
-      : "Review and send";
+  const primaryActionLabel = loading ? "Processing payment" : "Review and send";
 
   function updateRecipient(value: string) {
     setRecipient(value);

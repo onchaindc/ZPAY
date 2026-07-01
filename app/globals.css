@@ -13,10 +13,13 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  max-width: 100%;
   margin: 0;
   background:
     radial-gradient(circle at 20% 0%, rgba(250, 204, 21, 0.16), transparent 34rem),
@@ -29,6 +32,17 @@ body {
 button,
 input {
   font: inherit;
+}
+
+button,
+a,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+svg {
+  max-width: 100%;
 }
 
 input {
@@ -58,6 +72,7 @@ button:disabled {
     max-width: 1200px;
     padding-left: 1rem;
     padding-right: 1rem;
+    overflow-x: clip;
   }
 
   .app-sidebar {
@@ -94,6 +109,8 @@ button:disabled {
     top: calc(100% + 0.5rem);
     left: 1rem;
     right: 1rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     background: rgba(13, 15, 20, 0.98);
@@ -166,9 +183,9 @@ button:disabled {
 
   .icon-button {
     display: inline-flex;
-    height: 2.5rem;
-    width: 2.5rem;
-    flex: 0 0 2.5rem;
+    height: 2.75rem;
+    width: 2.75rem;
+    flex: 0 0 2.75rem;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
@@ -184,7 +201,7 @@ button:disabled {
   }
 
   .network-select {
-    height: 2.5rem;
+    height: 2.75rem;
     max-width: 9.5rem;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -213,7 +230,7 @@ button:disabled {
   }
 
   .wallet-button {
-    min-height: 2.5rem;
+    min-height: 2.75rem;
     max-width: 10.5rem;
     border-radius: 999px;
     padding: 0 0.9rem;
@@ -265,6 +282,7 @@ button:disabled {
   .balance-network-pill {
     display: inline-flex;
     width: fit-content;
+    max-width: 100%;
     align-items: center;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -385,6 +403,7 @@ button:disabled {
 
   .send-receipt-toggle {
     display: flex;
+    min-width: 0;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
@@ -437,6 +456,7 @@ button:disabled {
 
   .send-summary-row {
     display: flex;
+    min-width: 0;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
@@ -632,6 +652,8 @@ button:disabled {
     color: #111;
     font-weight: 700;
     width: 100%;
+    min-width: 0;
+    text-align: center;
     transition: transform 160ms ease, background 160ms ease, opacity 160ms ease;
   }
 
@@ -652,6 +674,8 @@ button:disabled {
     color: #fffdf0;
     font-weight: 700;
     width: 100%;
+    min-width: 0;
+    text-align: center;
     transition: border-color 160ms ease, background 160ms ease;
   }
 
@@ -663,6 +687,101 @@ button:disabled {
   .status-text {
     overflow-wrap: anywhere;
     word-break: break-word;
+  }
+}
+
+@media (max-width: 639px) {
+  @layer components {
+    .app-shell > main {
+      padding-left: 0.875rem;
+      padding-right: 0.875rem;
+    }
+
+    .glass,
+    .balance-hero,
+    .send-surface,
+    .activity-surface {
+      border-radius: 18px;
+    }
+
+    .balance-hero {
+      padding: 1rem;
+    }
+
+    .balance-hero .status-text {
+      font-size: clamp(2rem, 11vw, 2.75rem);
+      line-height: 1;
+    }
+
+    .balance-skeleton {
+      height: 3.75rem;
+      max-width: 100%;
+    }
+
+    .dashboard-action-card {
+      align-items: flex-start;
+      padding: 0.9rem;
+    }
+
+    .send-surface,
+    .send-input-group,
+    .send-receipt-toggle,
+    .send-summary-panel,
+    .activity-surface,
+    .activity-card,
+    .activity-skeleton-card {
+      padding: 0.875rem;
+    }
+
+    .send-receipt-toggle {
+      align-items: flex-start;
+    }
+
+    .send-summary-row {
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .send-summary-row > span:last-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      text-align: right;
+    }
+
+    .send-progress-card,
+    .send-success-card {
+      padding: 0.875rem;
+    }
+
+    .activity-timeline::before {
+      left: 0.6rem;
+    }
+
+    .activity-card,
+    .activity-skeleton-card {
+      padding-left: 2rem;
+    }
+
+    .activity-timeline-marker {
+      left: -0.1rem;
+    }
+
+    .activity-amount-panel {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .input-field {
+      min-height: 2.75rem;
+      padding-left: 0.85rem;
+      padding-right: 0.85rem;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 2.75rem;
+      white-space: normal;
+    }
   }
 }
 
@@ -751,6 +870,11 @@ button:disabled {
       padding-left: 0.75rem;
       padding-right: 0.75rem;
       font-size: 0.76rem;
+    }
+
+    .mobile-menu {
+      left: 0.75rem;
+      right: 0.75rem;
     }
   }
 }

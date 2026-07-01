@@ -71,19 +71,19 @@ export default function FaucetPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-6">
-        <p className="text-xs font-bold uppercase tracking-normal text-zama-soft sm:text-sm">Mint</p>
-        <h1 className="mt-2 text-2xl font-black text-white sm:text-4xl">Fund a private balance</h1>
-        <p className="mt-3 max-w-2xl text-sm text-zinc-400">
+    <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+      <div className="mb-7 max-w-3xl sm:mb-9">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Mint</p>
+        <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">Fund a private balance</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
           The ZamaPay contract has no public deposit path — balance is created by the
           contract owner via <code className="text-zama-gold">mint()</code>. Connect with the
           deployer wallet to credit any address with encrypted tokens.
         </p>
       </div>
 
-      <section className="glass rounded-xl p-4 sm:p-6">
-        <div className="grid gap-4">
+      <section className="glass rounded-xl p-4 sm:p-6 lg:max-w-2xl">
+        <div className="grid gap-5">
           <label className="grid gap-2 text-sm font-semibold text-white">
             Recipient
             <input

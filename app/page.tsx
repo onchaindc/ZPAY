@@ -19,17 +19,17 @@ const features = [
 
 export default function LandingPage() {
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-96px)] max-w-6xl flex-col px-4 py-10 sm:px-6 lg:px-8">
-      <section className="grid flex-1 gap-8 py-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <div>
+    <main className="mx-auto flex min-h-[calc(100vh-96px)] max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+      <section className="grid flex-1 gap-6 py-5 sm:gap-8 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="min-w-0">
           <p className="text-sm font-bold uppercase tracking-normal text-zama-soft">Zama FHEVM</p>
-          <h1 className="mt-4 max-w-3xl text-5xl font-black leading-tight text-white sm:text-6xl lg:text-7xl">
+          <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight text-white sm:text-6xl lg:text-7xl">
             ZAMAPAY
           </h1>
-          <p className="mt-5 max-w-2xl text-2xl font-semibold text-zama-soft sm:text-3xl">
+          <p className="mt-4 max-w-2xl text-xl font-semibold text-zama-soft sm:mt-5 sm:text-3xl">
             Send privately. Prove selectively.
           </p>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-300">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 sm:mt-5 sm:leading-8">
             Confidential token transfers with encrypted amounts, local reveals, and receipts for parties
             who need proof without making every payment public.
           </p>
@@ -41,8 +41,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="glass rounded-lg p-5 shadow-glow sm:p-6">
-          <div className="rounded-lg border border-zama-gold/18 bg-midnight/80 p-5">
+        <div className="glass min-w-0 rounded-lg p-4 shadow-glow sm:p-6">
+          <div className="min-w-0 rounded-lg border border-zama-gold/18 bg-midnight/80 p-4 sm:p-5">
             <div className="mb-5">
               <ZamapayLogo />
             </div>
@@ -58,15 +58,15 @@ export default function LandingPage() {
             <div className="mt-5 grid gap-3 text-sm text-zinc-300">
               <p className="flex justify-between gap-4">
                 <span>Sender</span>
-                <span className="font-semibold text-white">Connected wallet</span>
+                <span className="min-w-0 text-right font-semibold text-white">Connected wallet</span>
               </p>
               <p className="flex justify-between gap-4">
                 <span>Receiver</span>
-                <span className="font-semibold text-white">Encrypted recipient</span>
+                <span className="min-w-0 text-right font-semibold text-white">Encrypted recipient</span>
               </p>
               <p className="flex justify-between gap-4">
                 <span>Receipt</span>
-                <span className="font-semibold text-white">Selective</span>
+                <span className="min-w-0 text-right font-semibold text-white">Selective</span>
               </p>
             </div>
           </div>

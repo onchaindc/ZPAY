@@ -28,7 +28,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <main className="mx-auto grid h-[100dvh] max-w-5xl place-items-center overflow-hidden px-4 sm:px-6 lg:px-8">
+    <main className="grid h-full w-full place-items-center overflow-hidden px-4 sm:px-6 lg:px-8">
       <section className="welcome-stage flex w-full max-w-xl flex-col items-center justify-center text-center">
         <div className="welcome-logo w-full max-w-[420px]">
           <ZamapayLogo />

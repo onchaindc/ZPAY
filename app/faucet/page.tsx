@@ -76,7 +76,7 @@ export default function FaucetPage() {
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Shield Funds</p>
         <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">Create a confidential balance</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
-          Shield funds into ZamaPay's confidential payment layer. Balances are encrypted with
+          Shield funds into ZamaPay&apos;s confidential payment layer. Balances are encrypted with
           Zama FHE and can be used for confidential payments on Ethereum.
         </p>
       </div>

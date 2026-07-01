@@ -74,6 +74,11 @@ button:disabled {
     padding-top: 7rem;
   }
 
+  .app-shell-landing {
+    padding-top: 0;
+    padding-left: 0;
+  }
+
   .app-shell > main {
     width: 100%;
     max-width: 1200px;
@@ -708,6 +713,31 @@ button:disabled {
     background: rgba(255, 255, 255, 0.035);
     padding: 0.85rem 1rem;
   }
+
+  .welcome-stage {
+    animation: welcome-fade 420ms ease-out;
+  }
+
+  .welcome-logo {
+    animation: welcome-rise 480ms ease-out;
+  }
+
+  .welcome-typing {
+    width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid rgba(250, 204, 21, 0.85);
+    animation:
+      welcome-type 2.2s steps(34, end) 300ms forwards,
+      welcome-caret 900ms step-end 300ms infinite;
+  }
+
+  .welcome-subcopy,
+  .welcome-actions {
+    opacity: 0;
+    animation: welcome-fade 480ms ease-out 1.6s forwards;
+  }
 }
 
 @media (max-width: 639px) {
@@ -865,6 +895,49 @@ button:disabled {
 
   100% {
     background-position: -80% 0;
+  }
+}
+
+@keyframes welcome-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes welcome-fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes welcome-type {
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 34ch;
+  }
+}
+
+@keyframes welcome-caret {
+  0%,
+  100% {
+    border-color: rgba(250, 204, 21, 0.85);
+  }
+
+  50% {
+    border-color: transparent;
   }
 }
 

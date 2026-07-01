@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import AppChrome from "@/components/AppChrome";
 
 export const metadata: Metadata = {
   title: "ZAMAPAY",
@@ -20,8 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
-        <Navbar />
-        <div className="app-shell">{children}</div>
+        <AppChrome>{children}</AppChrome>
       </body>
     </html>
   );

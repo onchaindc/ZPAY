@@ -75,7 +75,7 @@ export default function BalanceCard() {
       if (!decryptedBalance || decryptedBalance === "0") {
         setBalance("");
         setRevealState("empty");
-        setToast("No private balance yet. Receive a transfer or ask the owner to mint you tokens.");
+        setToast("No confidential balance yet. Shield funds or receive a confidential payment.");
         setTone("idle");
         return;
       }
@@ -120,7 +120,7 @@ export default function BalanceCard() {
 
     switch (revealState) {
       case "empty":
-        return "No private balance yet";
+        return "No confidential balance yet";
       case "pending":
         return "Decrypting…";
       case "unavailable":
@@ -166,14 +166,14 @@ export default function BalanceCard() {
 
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               <span className="balance-network-pill">{networkName}</span>
-              <span className="text-sm text-zinc-400">Encrypted until you reveal locally.</span>
+              <span className="text-sm text-zinc-400">Protected by Zama FHE until you reveal locally.</span>
             </div>
 
             {revealState === "empty" ? (
               <div className="mt-5 max-w-xl rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                <p className="font-bold text-white">Your vault is ready.</p>
+                <p className="font-bold text-white">Your confidential vault is ready.</p>
                 <p className="mt-1 text-sm leading-6 text-zinc-400">
-                  Shield funds from Quick Actions or receive a private payment to activate your encrypted balance.
+                  Shield funds from Quick Actions or receive a confidential payment to activate your encrypted balance.
                 </p>
               </div>
             ) : null}
@@ -186,7 +186,7 @@ export default function BalanceCard() {
             className="balance-reveal-button"
           >
             {loading ? <LoadingSpinner className="mr-2" /> : null}
-            Reveal Balance
+            Reveal Confidential Balance
           </button>
         </div>
       </div>

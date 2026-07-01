@@ -47,7 +47,7 @@ export default function FaucetPage() {
       const tx = await contract.mint(target, parsedAmount);
       setToast(`Mint submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
-      setToast(`Minted ${amount} private tokens to ${truncateAddress(target)}.`);
+      setToast(`Shielded ${amount} confidential tokens to ${truncateAddress(target)}.`);
       setTone("success");
       setRecipient("");
     } catch (error) {
@@ -73,12 +73,11 @@ export default function FaucetPage() {
   return (
     <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <div className="mb-7 max-w-3xl sm:mb-9">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Mint</p>
-        <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">Fund a private balance</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Shield Funds</p>
+        <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">Create a confidential balance</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
-          The ZamaPay contract has no public deposit path — balance is created by the
-          contract owner via <code className="text-zama-gold">mint()</code>. Connect with the
-          deployer wallet to credit any address with encrypted tokens.
+          Shield funds into ZamaPay's confidential payment layer. Balances are encrypted with
+          Zama FHE and can be used for confidential payments on Ethereum.
         </p>
       </div>
 
@@ -95,7 +94,7 @@ export default function FaucetPage() {
           </label>
 
           <label className="grid gap-2 text-sm font-semibold text-white">
-            Amount (tokens)
+            Amount
             <input
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
@@ -107,7 +106,7 @@ export default function FaucetPage() {
 
           <button type="button" onClick={mintBalance} disabled={loading} className="primary-button sm:w-auto">
             {loading ? <LoadingSpinner className="mr-2" /> : null}
-            Mint Private Balance
+            Shield Funds
           </button>
         </div>
 

@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "ZAMAPAY",
-  description: "Send privately. Prove selectively.",
+  description: "Confidential payments on Ethereum powered by Zama FHE.",
   icons: {
     icon: "/zamapay-logo.jpg",
     shortcut: "/zamapay-logo.jpg",

@@ -4,16 +4,16 @@ import ZamapayLogo from "@/components/ZamapayLogo";
 
 const features = [
   {
-    title: "Hidden Balance",
-    text: "Encrypted balances stay unreadable until you choose to reveal them locally."
+    title: "Shield Funds",
+    text: "Move funds into a confidential balance protected by Zama FHE."
   },
   {
-    title: "Private Transfer",
-    text: "Transfer amounts are encrypted with FHE before your transaction is sent."
+    title: "Send Confidential Payments",
+    text: "Send encrypted payment amounts across Ethereum without exposing sensitive details."
   },
   {
-    title: "Selective Receipt",
-    text: "Receipts prove payment details only to the sender and receiver."
+    title: "Unshield Funds",
+    text: "Reveal or prove payment information only when you choose."
   }
 ];
 
@@ -22,21 +22,21 @@ export default function LandingPage() {
     <main className="mx-auto flex min-h-[calc(100vh-96px)] max-w-6xl flex-col px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
       <section className="grid flex-1 gap-6 py-5 sm:gap-8 sm:py-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="min-w-0">
-          <p className="text-sm font-bold uppercase tracking-normal text-zama-soft">Zama FHEVM</p>
+          <p className="text-sm font-bold uppercase tracking-normal text-zama-soft">Powered by Zama FHE</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight text-white sm:text-6xl lg:text-7xl">
-            ZAMAPAY
+            Confidential Payments on Ethereum.
           </h1>
           <p className="mt-4 max-w-2xl text-xl font-semibold text-zama-soft sm:mt-5 sm:text-3xl">
-            Send privately. Prove selectively.
+            Protect balances and payment information using Fully Homomorphic Encryption powered by Zama.
           </p>
           <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300 sm:mt-5 sm:leading-8">
-            Confidential token transfers with encrypted amounts, local reveals, and receipts for parties
-            who need proof without making every payment public.
+            ZamaPay is the confidential payment layer for Ethereum, built for shielded balances,
+            encrypted payment amounts, and selective disclosure when proof is required.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <ConnectButton />
             <Link href="/dashboard" className="secondary-button">
-              Open Dashboard
+              Enter ZamaPay
             </Link>
           </div>
         </div>
@@ -48,11 +48,11 @@ export default function LandingPage() {
             </div>
             <div className="flex items-center justify-between border-b border-white/10 pb-5">
               <div>
-                <p className="text-sm text-zinc-400">Encrypted amount</p>
+                <p className="text-sm text-zinc-400">Confidential amount</p>
                 <p className="mt-2 text-4xl font-black text-white">••••</p>
               </div>
               <span className="rounded-lg bg-zama-gold/20 px-3 py-2 text-sm font-bold text-zama-gold">
-                FHE
+                Zama FHE
               </span>
             </div>
             <div className="mt-5 grid gap-3 text-sm text-zinc-300">
@@ -65,7 +65,7 @@ export default function LandingPage() {
                 <span className="min-w-0 text-right font-semibold text-white">Encrypted recipient</span>
               </p>
               <p className="flex justify-between gap-4">
-                <span>Receipt</span>
+                <span>Disclosure</span>
                 <span className="min-w-0 text-right font-semibold text-white">Selective</span>
               </p>
             </div>

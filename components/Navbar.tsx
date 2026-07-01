@@ -19,7 +19,7 @@ const links = [
   },
   {
     href: "/send",
-    label: "Send",
+    label: "Pay",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="m5 12 14-7-4.6 14-2.6-5.8L5 12Z" />
@@ -28,7 +28,7 @@ const links = [
   },
   {
     href: "/receipts",
-    label: "Receipts",
+    label: "Activity",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.8-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Zm2 6h6V7H9v2Zm0 4h6v-2H9v2Zm0 4h4v-2H9v2Z" />
@@ -37,7 +37,7 @@ const links = [
   },
   {
     href: "/faucet",
-    label: "Mint",
+    label: "Shield",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 3 4 7v6c0 4.4 3.4 7.4 8 8 4.6-.6 8-3.6 8-8V7l-8-4Zm1 5v3h3v2h-3v3h-2v-3H8v-2h3V8h2Z" />

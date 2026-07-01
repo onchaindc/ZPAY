@@ -43,7 +43,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
       ? "Use a whole number of tokens greater than zero."
       : "";
 
-  const primaryActionLabel = loading ? "Processing payment" : "Review and send";
+  const primaryActionLabel = loading ? "Processing confidential payment" : "Review confidential payment";
 
   function updateRecipient(value: string) {
     setRecipient(value);
@@ -85,7 +85,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
     }
 
     setLoading(true);
-    setToast("Encrypting amount locally...");
+    setToast("Encrypting payment amount locally...");
 
     try {
       const wallet = await connectWallet();
@@ -93,7 +93,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
       const contractAddress = getSelectedContractAddress();
       const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
       const displayAmount = formatTokenAmount(parsedAmount);
-      setToast(generateReceipt ? `Sending ${displayAmount} tokens privately with receipt...` : `Sending ${displayAmount} tokens privately...`);
+      setToast(generateReceipt ? `Sending ${displayAmount} confidential tokens with receipt...` : `Sending ${displayAmount} confidential tokens...`);
 
       const tx = generateReceipt
         ? await contract.transferWithReceipt(trimmedRecipient, encryptedAmount.encryptedAmount, encryptedAmount.inputProof)
@@ -115,8 +115,8 @@ export default function SendForm({ compact = false }: SendFormProps) {
       const receiptId = (receiptEvent?.args?.receiptId as string | undefined) ?? null;
       setToast(
         generateReceipt && receiptId
-          ? `Private transfer confirmed. Receipt: ${truncateAddress(receiptId)}`
-          : "Private transfer confirmed."
+          ? `Confidential payment confirmed. Receipt: ${truncateAddress(receiptId)}`
+          : "Confidential payment confirmed."
       );
       setTone("success");
       setSuccessSummary({
@@ -141,10 +141,10 @@ export default function SendForm({ compact = false }: SendFormProps) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:gap-8">
         <div className="min-w-0">
           <div className="mb-6">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Private Transfer</p>
-            <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">Send encrypted tokens</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Powered by Zama FHE</p>
+            <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">Send confidential tokens</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">
-              Confirm the wallet, enter the token amount, and decide whether to generate a selective receipt.
+              Confirm the recipient, encrypt the payment amount, and choose whether to generate a selective receipt.
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
               <div className="send-group-header">
                 <div>
                   <p className="text-sm font-bold text-white">Payment details</p>
-                  <p className="mt-1 text-sm text-zinc-400">Recipient and amount are encrypted before submission.</p>
+                  <p className="mt-1 text-sm text-zinc-400">Recipient and amount are prepared for confidential settlement.</p>
                 </div>
                 <span className="send-step-pill">Step 1</span>
               </div>
@@ -186,7 +186,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
                     aria-invalid={amountError ? true : false}
                   />
                   <span className={`text-xs ${amountError ? "text-rose-300" : "text-zinc-500"}`}>
-                    {amountError || "Whole tokens only. ZamaPay transfers raw token units."}
+                    {amountError || "Whole confidential token units only."}
                   </span>
                 </label>
               </div>
@@ -200,9 +200,9 @@ export default function SendForm({ compact = false }: SendFormProps) {
             >
               <span className="min-w-0">
                 <span className="block text-sm font-bold uppercase tracking-[0.18em] text-zama-soft">Selective proof</span>
-                <span className="mt-2 block text-base font-black text-white">Generate receipt</span>
+                <span className="mt-2 block text-base font-black text-white">Generate selective receipt</span>
                 <span className="mt-1 block text-sm leading-6 text-zinc-400">
-                  Reveal payment details only to authorized parties after the transfer settles.
+                  Preserve a confidential proof trail for authorized parties after settlement.
                 </span>
               </span>
               <span
@@ -224,7 +224,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">Review</p>
-              <h3 className="mt-2 text-xl font-black text-white">Confirmation</h3>
+              <h3 className="mt-2 text-xl font-black text-white">Payment review</h3>
             </div>
             <span className={`send-status-pill ${loading ? "send-status-pill-live" : tone === "success" ? "send-status-pill-success" : ""}`}>
               {loading ? "Encrypting" : tone === "success" ? "Confirmed" : "Ready"}
@@ -257,7 +257,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
                 <div>
                   <p className="font-bold text-white">Preparing confidential payment</p>
                   <p className="mt-1 text-sm text-zinc-400">
-                    Encrypting locally, then waiting for wallet confirmation and on-chain settlement.
+                    Encrypting with Zama FHE, then waiting for wallet confirmation and Ethereum settlement.
                   </p>
                 </div>
               </div>
@@ -271,7 +271,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
                   </svg>
                 </span>
                 <div>
-                  <p className="font-black text-white">Payment confirmed</p>
+                  <p className="font-black text-white">Confidential payment confirmed</p>
                   <p className="mt-1 text-sm leading-6 text-zinc-400">
                     {successSummary.amount} tokens sent to {truncateAddress(successSummary.recipient)}.
                     {successSummary.receipt ? " Selective receipt enabled." : " No receipt generated."}
@@ -283,7 +283,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
             <div className="send-progress-card">
               <p className="font-bold text-white">Final review</p>
               <p className="mt-1 text-sm leading-6 text-zinc-400">
-                Check the recipient, token amount, and receipt setting before opening your wallet confirmation.
+                Check the recipient, amount, and disclosure setting before opening your wallet confirmation.
               </p>
             </div>
           )}

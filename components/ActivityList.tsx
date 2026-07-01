@@ -109,7 +109,7 @@ export default function ActivityList() {
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Recent Activity</p>
-          <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Private transfers</h2>
+          <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Confidential transfers</h2>
         </div>
         <span className="text-sm font-semibold text-zinc-500">{activity.length} events</span>
       </div>
@@ -132,9 +132,9 @@ export default function ActivityList() {
               <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.8-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Zm2 6h6V7H9v2Zm0 4h6v-2H9v2Z" />
             </svg>
           </div>
-          <p className="mt-4 font-black text-white">No private activity yet</p>
+          <p className="mt-4 font-black text-white">No confidential activity yet</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Shield funds or send your first encrypted payment. Confirmed activity will appear here automatically.
+            Shield funds or send your first confidential payment. Confirmed activity will appear here automatically.
           </p>
         </div>
       )}

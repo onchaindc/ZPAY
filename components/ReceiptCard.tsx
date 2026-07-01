@@ -55,27 +55,41 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
   }
 
   return (
-    <article className="glass rounded-xl p-4 sm:p-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <article className="activity-card">
+      <div className="activity-timeline-marker" aria-hidden="true" />
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
-          <p className="truncate text-xs font-semibold uppercase tracking-normal text-zama-soft">{receipt.id}</p>
-          <div className="mt-3 grid gap-2 text-sm text-zinc-300">
-            <p className="status-text">
-              Sender <span className="font-semibold text-white">{truncateAddress(receipt.sender)}</span>
-            </p>
-            <p className="status-text">
-              Receiver <span className="font-semibold text-white">{truncateAddress(receipt.receiver)}</span>
-            </p>
-            <p>{new Date(receipt.timestamp * 1000).toLocaleString()}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="activity-badge">Encrypted</span>
+            <p className="truncate text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">{receipt.id}</p>
+          </div>
+
+          <div className="mt-4 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
+            <div className="activity-detail">
+              <span className="activity-detail-label">Sender</span>
+              <span className="status-text font-semibold text-white">{truncateAddress(receipt.sender)}</span>
+            </div>
+            <div className="activity-detail">
+              <span className="activity-detail-label">Receiver</span>
+              <span className="status-text font-semibold text-white">{truncateAddress(receipt.receiver)}</span>
+            </div>
+            <div className="activity-detail sm:col-span-2">
+              <span className="activity-detail-label">Settled</span>
+              <span className="font-semibold text-white">{new Date(receipt.timestamp * 1000).toLocaleString()}</span>
+            </div>
           </div>
         </div>
-        <div className="text-left sm:text-right">
-          <p className="text-2xl font-black text-white">{amount || "\u2022\u2022\u2022\u2022"}</p>
-          <p className="text-xs font-semibold text-zinc-400">tokens</p>
+
+        <div className="activity-amount-panel">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">Amount</p>
+          <p className="mt-3 text-3xl font-black leading-none text-white sm:text-4xl">
+            {loading ? <span className="activity-skeleton-line block h-10 w-24" aria-label="Loading amount" /> : amount || "\u2022\u2022\u2022\u2022"}
+          </p>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Encrypted tokens</p>
         </div>
       </div>
 
-      <button type="button" onClick={revealAmount} disabled={loading} className="secondary-button mt-5 sm:w-auto">
+      <button type="button" onClick={revealAmount} disabled={loading} className="secondary-button mt-6 sm:w-auto">
         {loading ? <LoadingSpinner className="mr-2" /> : null}
         Reveal Amount
       </button>

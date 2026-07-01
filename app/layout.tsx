@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans antialiased">
         <Navbar />
-        {children}
+        <div className="app-shell">{children}</div>
       </body>
     </html>
   );

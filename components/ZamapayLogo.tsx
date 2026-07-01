@@ -17,7 +17,7 @@ export default function ZamapayLogo({ compact = false }: ZamapayLogoProps) {
         priority={compact}
         className={
           compact
-            ? "h-12 w-auto max-w-[190px] rounded-sm object-contain"
+            ? "h-9 w-auto max-w-[150px] rounded-sm object-contain sm:h-10"
             : "h-auto w-full max-w-[560px] rounded-lg object-contain"
         }
       />

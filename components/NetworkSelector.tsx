@@ -67,7 +67,7 @@ export default function NetworkSelector() {
         value={networkKey}
         disabled={loading}
         onChange={(event) => handleNetworkChange(event.target.value as NetworkKey)}
-        className="h-11 rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-bold text-white outline-none transition hover:border-zama-gold/55 focus:border-zama-gold"
+        className="network-select"
       >
         {Object.entries(NETWORKS).map(([key, network]) => (
           <option key={key} value={key} className="bg-midnight text-white">

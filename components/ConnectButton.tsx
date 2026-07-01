@@ -68,15 +68,15 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
   }
 
   return (
-    <div className="flex flex-col items-stretch gap-2 sm:items-end">
+    <div className="flex min-w-0 flex-col items-stretch gap-2 sm:items-end">
       <button
         type="button"
         onClick={handleConnect}
         disabled={loading}
-        className={`primary-button ${compact ? "w-auto px-3 text-sm" : "px-5"}`}
+        className={`primary-button ${compact ? "wallet-button" : "px-5"}`}
       >
         {loading ? <LoadingSpinner className="mr-2" /> : null}
-        {address ? truncateAddress(address) : "Connect Wallet"}
+        <span className="truncate">{address ? truncateAddress(address) : "Connect Wallet"}</span>
       </button>
       {error ? <p className="status-text max-w-52 text-xs text-rose-300">{error}</p> : null}
     </div>

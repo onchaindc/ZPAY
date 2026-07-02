@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AppChrome from "@/components/AppChrome";
 
@@ -10,6 +10,13 @@ export const metadata: Metadata = {
     shortcut: "/zamapay-logo.jpg",
     apple: "/zamapay-logo.jpg"
   }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#05070d"
 };
 
 export default function RootLayout({

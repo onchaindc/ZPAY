@@ -1,6 +1,7 @@
- "use client";
+"use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ConnectButton from "@/components/ConnectButton";
 import ZamapayLogo from "@/components/ZamapayLogo";
@@ -8,6 +9,9 @@ import ZamapayLogo from "@/components/ZamapayLogo";
 export default function LandingPage() {
   const fullLine = "Confidential payments on Ethereum";
   const [typedLine, setTypedLine] = useState("");
+  const [typedDone, setTypedDone] = useState(false);
+  const [connectedAddress, setConnectedAddress] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const startDelay = window.setTimeout(() => {
@@ -18,6 +22,7 @@ export default function LandingPage() {
 
         if (index >= fullLine.length) {
           window.clearInterval(typeInterval);
+          setTypedDone(true);
         }
       }, 55);
     }, 280);
@@ -27,8 +32,22 @@ export default function LandingPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!typedDone || !connectedAddress) {
+      return;
+    }
+
+    const proceedTimer = window.setTimeout(() => {
+      router.push("/dashboard");
+    }, 420);
+
+    return () => {
+      window.clearTimeout(proceedTimer);
+    };
+  }, [connectedAddress, router, typedDone]);
+
   return (
-    <main className="grid h-full w-full place-items-center overflow-hidden px-4 sm:px-6 lg:px-8">
+    <main className="fixed inset-0 grid place-items-center overflow-hidden px-4 sm:px-6 lg:px-8">
       <section className="welcome-stage flex w-full max-w-xl flex-col items-center justify-center text-center">
         <div className="welcome-logo w-full max-w-[420px]">
           <ZamapayLogo />
@@ -43,9 +62,9 @@ export default function LandingPage() {
         </p>
 
         <div className="welcome-actions mt-8 flex w-full max-w-sm flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center">
-          <ConnectButton />
+          <ConnectButton onConnected={setConnectedAddress} />
           <Link href="/dashboard" className="secondary-button">
-            Skip
+            {connectedAddress ? "Proceed" : "Skip"}
           </Link>
         </div>
       </section>

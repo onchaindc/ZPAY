@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="en" className="w-full max-w-[100vw] overflow-x-hidden">
+      <body className="w-full max-w-[100vw] overflow-x-hidden font-sans antialiased">
         <AppChrome>{children}</AppChrome>
       </body>
     </html>

@@ -55,7 +55,7 @@ export default function ReceiptsPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[1200px] px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
+    <main className="w-full max-w-screen overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
       <div className="mb-7 flex flex-col gap-4 md:mb-9 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>

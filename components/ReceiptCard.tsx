@@ -57,14 +57,14 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
   return (
     <article className="activity-card">
       <div className="activity-timeline-marker" aria-hidden="true" />
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
             <span className="activity-badge">Confidential</span>
             <p className="truncate text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">{receipt.id}</p>
           </div>
 
-          <div className="mt-4 grid gap-3 text-sm text-zinc-300 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3 text-sm text-zinc-300 md:grid-cols-2">
             <div className="activity-detail">
               <span className="activity-detail-label">Sender</span>
               <span className="status-text font-semibold text-white">{truncateAddress(receipt.sender)}</span>
@@ -73,7 +73,7 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
               <span className="activity-detail-label">Receiver</span>
               <span className="status-text font-semibold text-white">{truncateAddress(receipt.receiver)}</span>
             </div>
-            <div className="activity-detail sm:col-span-2">
+            <div className="activity-detail md:col-span-2">
               <span className="activity-detail-label">Settled</span>
               <span className="font-semibold text-white">{new Date(receipt.timestamp * 1000).toLocaleString()}</span>
             </div>
@@ -82,14 +82,14 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
 
         <div className="activity-amount-panel">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">Amount</p>
-          <p className="mt-3 text-3xl font-black leading-none text-white sm:text-4xl">
+          <p className="mt-3 text-3xl font-black leading-none text-white md:text-4xl">
             {loading ? <span className="activity-skeleton-line block h-10 w-24" aria-label="Loading amount" /> : amount || "\u2022\u2022\u2022\u2022"}
           </p>
           <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Confidential tokens</p>
         </div>
       </div>
 
-      <button type="button" onClick={revealAmount} disabled={loading} className="secondary-button mt-6 sm:w-auto">
+      <button type="button" onClick={revealAmount} disabled={loading} className="secondary-button mt-6 md:w-auto">
         {loading ? <LoadingSpinner className="mr-2" /> : null}
         Reveal Amount Locally
       </button>

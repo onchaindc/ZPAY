@@ -68,7 +68,7 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
   }
 
   return (
-    <div className="flex min-w-0 flex-col items-stretch gap-2 sm:items-end">
+    <div className="flex min-w-0 flex-col items-stretch gap-2 md:items-end">
       <button
         type="button"
         onClick={handleConnect}

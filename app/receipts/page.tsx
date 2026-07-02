@@ -55,18 +55,18 @@ export default function ReceiptsPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-      <div className="mb-7 flex flex-col gap-4 sm:mb-9 sm:flex-row sm:items-end sm:justify-between">
+    <main className="mx-auto w-full max-w-[1200px] px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
+      <div className="mb-7 flex flex-col gap-4 md:mb-9 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Powered by Zama FHE</p>
-          <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
+          <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">
             Confidential payment activity.
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
             Review encrypted receipts, inspect counterparties, and reveal payment details locally when needed.
           </p>
         </div>
-        <button type="button" onClick={loadReceipts} disabled={loading} className="primary-button sm:w-auto">
+        <button type="button" onClick={loadReceipts} disabled={loading} className="primary-button md:w-auto">
           {loading ? <LoadingSpinner className="mr-2" /> : null}
           Load Confidential Activity
         </button>
@@ -77,10 +77,10 @@ export default function ReceiptsPage() {
       </div>
 
       <section className="activity-surface">
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Timeline</p>
-            <h2 className="mt-2 text-xl font-black text-white sm:text-2xl">Confidential transactions</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Timeline</p>
+            <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Confidential transactions</h2>
           </div>
           <span className="text-sm font-semibold text-zinc-500">
             {loading ? "Refreshing..." : `${receipts.length} confidential receipts`}

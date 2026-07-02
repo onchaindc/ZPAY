@@ -80,7 +80,7 @@ export default function Navbar() {
       </aside>
 
       <header className="app-topbar">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="topbar-primary">
           <button
             type="button"
             onClick={() => setOpen((current) => !current)}
@@ -102,10 +102,34 @@ export default function Navbar() {
           <NetworkSelector />
           <ConnectButton compact />
         </div>
+      </header>
 
-        {open ? (
-          <div className="mobile-menu lg:hidden">
-            <nav className="grid gap-1" aria-label="Mobile navigation">
+      {open ? (
+        <>
+          <button
+            type="button"
+            className="mobile-menu-backdrop lg:hidden"
+            aria-label="Close navigation"
+            onClick={() => setOpen(false)}
+          />
+          <aside className="mobile-menu lg:hidden" aria-label="Mobile navigation drawer">
+            <div className="mobile-menu-header">
+              <Link href="/" aria-label="ZAMAPAY home" className="min-w-0" onClick={() => setOpen(false)}>
+                <ZamapayLogo compact />
+              </Link>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="icon-button"
+                aria-label="Close navigation"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="2">
+                  <path d="M6 6 18 18M18 6 6 18" />
+                </svg>
+              </button>
+            </div>
+
+            <nav className="mobile-menu-nav" aria-label="Mobile navigation">
               {links.map((link) => {
                 const active = pathname === link.href;
 
@@ -122,9 +146,9 @@ export default function Navbar() {
                 );
               })}
             </nav>
-          </div>
-        ) : null}
-      </header>
+          </aside>
+        </>
+      ) : null}
     </>
   );
 }

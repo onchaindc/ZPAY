@@ -37,29 +37,29 @@ const quickActions = [
 
 export default function DashboardPage() {
   return (
-    <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-      <div className="mb-7 max-w-3xl sm:mb-9">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Powered by Zama FHE</p>
-        <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+    <main className="mx-auto w-full max-w-[1200px] px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
+      <div className="mb-7 max-w-3xl md:mb-9">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
+        <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">
           Your confidential balance.
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
           Manage shielded funds, confidential payments, and selective receipts from one encrypted vault.
         </p>
       </div>
 
-      <div className="grid gap-5 sm:gap-6 lg:gap-7">
+      <div className="grid gap-5 md:gap-6 lg:gap-7">
         <BalanceCard />
 
         <section aria-labelledby="quick-actions-title" className="grid gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Quick Actions</p>
-            <h2 id="quick-actions-title" className="mt-2 text-xl font-black text-white sm:text-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Quick Actions</p>
+            <h2 id="quick-actions-title" className="mt-2 text-xl font-black text-white md:text-2xl">
               Move value confidentially
             </h2>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {quickActions.map((action) => (
               <Link key={action.title} href={action.href} className="dashboard-action-card">
                 <span className="dashboard-action-icon">{action.icon}</span>

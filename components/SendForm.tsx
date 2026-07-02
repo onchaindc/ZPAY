@@ -137,12 +137,12 @@ export default function SendForm({ compact = false }: SendFormProps) {
   }
 
   return (
-    <section className={`send-surface ${compact ? "p-4 sm:p-6" : "p-4 sm:p-6 lg:p-8"}`}>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:gap-8">
+    <section className={`send-surface ${compact ? "p-4 md:p-6" : "p-4 md:p-6 lg:p-8"}`}>
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-8">
         <div className="min-w-0">
           <div className="mb-6">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft sm:text-sm">Powered by Zama FHE</p>
-            <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">Send confidential tokens</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
+            <h2 className="mt-2 text-2xl font-black text-white md:text-3xl">Send confidential tokens</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">
               Confirm the recipient, encrypt the payment amount, and choose whether to generate a selective receipt.
             </p>

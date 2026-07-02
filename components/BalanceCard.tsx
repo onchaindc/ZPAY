@@ -134,7 +134,7 @@ export default function BalanceCard() {
     <section className="balance-hero">
       <div className="balance-hero-glow" aria-hidden="true" />
       <div className="relative flex flex-col gap-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <span className="balance-shield" aria-hidden="true">
@@ -142,7 +142,7 @@ export default function BalanceCard() {
                   <path d="M12 3 5 6.2v5.6c0 4.1 2.9 7.7 7 8.7 4.1-1 7-4.6 7-8.7V6.2L12 3Zm0 4.2 3.8 1.7v3c0 2.5-1.5 4.7-3.8 5.7-2.3-1-3.8-3.2-3.8-5.7v-3L12 7.2Z" />
                 </svg>
               </span>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-zama-soft sm:text-sm">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-zama-soft md:text-sm">
                 Confidential Balance
               </p>
             </div>
@@ -152,11 +152,11 @@ export default function BalanceCard() {
                 <div className="balance-skeleton" aria-label="Loading balance" />
               ) : (
                 <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
-                  <span className="status-text text-4xl font-black leading-none text-white sm:text-6xl lg:text-7xl">
+                  <span className="status-text text-4xl font-black leading-none text-white md:text-6xl lg:text-7xl">
                     {balanceLabel}
                   </span>
                   {revealState === "real" ? (
-                    <span className="pb-1 text-sm font-bold uppercase tracking-[0.18em] text-zinc-400 sm:pb-2">
+                    <span className="pb-1 text-sm font-bold uppercase tracking-[0.18em] text-zinc-400 md:pb-2">
                       tokens
                     </span>
                   ) : null}
@@ -164,7 +164,7 @@ export default function BalanceCard() {
               )}
             </div>
 
-            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <div className="mt-5 flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
               <span className="balance-network-pill">{networkName}</span>
               <span className="text-sm text-zinc-400">Protected by Zama FHE until you reveal locally.</span>
             </div>

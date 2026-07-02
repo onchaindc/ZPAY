@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConnectButton from "@/components/ConnectButton";
 import NetworkSelector from "@/components/NetworkSelector";
 import ZamapayLogo from "@/components/ZamapayLogo";
@@ -50,9 +50,13 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
     <>
-      <aside className="app-sidebar">
+      <aside className="app-sidebar hidden lg:flex">
         <Link href="/" aria-label="ZAMAPAY home" className="sidebar-brand">
           <ZamapayLogo compact />
         </Link>

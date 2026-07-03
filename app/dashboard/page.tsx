@@ -37,13 +37,13 @@ const quickActions = [
 
 export default function DashboardPage() {
   return (
-    <main className="w-full max-w-screen overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
-      <div className="mb-7 max-w-3xl md:mb-9">
+    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
+      <div className="mx-auto mb-7 max-w-3xl text-center md:mb-9">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
         <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">
           Your confidential balance.
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
+        <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
           Manage shielded funds, confidential payments, and selective receipts from one encrypted vault.
         </p>
       </div>
@@ -52,7 +52,7 @@ export default function DashboardPage() {
         <BalanceCard />
 
         <section aria-labelledby="quick-actions-title" className="grid gap-4">
-          <div>
+          <div className="text-center">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Quick Actions</p>
             <h2 id="quick-actions-title" className="mt-2 text-xl font-black text-white md:text-2xl">
               Move value confidentially

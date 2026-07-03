@@ -18,6 +18,15 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  function goBack() {
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+
+    window.location.href = "/dashboard";
+  }
+
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -47,6 +56,17 @@ export default function Navbar() {
           <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
             <ZamapayLogo compact />
           </Link>
+
+          <button
+            type="button"
+            onClick={goBack}
+            className="navbar-back-button"
+            aria-label="Go back"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
+            </svg>
+          </button>
 
           <button
             type="button"

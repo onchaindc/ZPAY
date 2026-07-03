@@ -76,8 +76,6 @@ export default function BalanceCard() {
       if (!decryptedBalance || decryptedBalance === "0") {
         setBalance("");
         setRevealState("empty");
-        setToast("No confidential balance yet. Shield funds or receive a confidential payment.");
-        setTone("idle");
         return;
       }
 
@@ -87,23 +85,17 @@ export default function BalanceCard() {
       } catch {
         setBalance("");
         setRevealState("unavailable");
-        setToast("Balance could not be decrypted yet.");
-        setTone("idle");
         return;
       }
 
       if (asBigInt === MAX_UINT64 || asBigInt > DECRYPTION_UPPER_BOUND) {
         setBalance("");
         setRevealState("pending");
-        setToast("Decryption pending — try again in a moment.");
-        setTone("idle");
         return;
       }
 
       setBalance(asBigInt.toString());
       setRevealState("real");
-      setToast("Balance revealed locally.");
-      setTone("success");
     } catch (error) {
       setBalance("");
       setRevealState("idle");
@@ -167,17 +159,8 @@ export default function BalanceCard() {
 
             <div className="mt-5 flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
               <span className="balance-network-pill">{networkName}</span>
-              <span className="text-sm text-zinc-400">Protected by Zama FHE until you reveal locally.</span>
             </div>
 
-            {revealState === "empty" ? (
-              <div className="mt-5 max-w-xl rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                <p className="font-bold text-white">Your confidential vault is ready.</p>
-                <p className="mt-1 text-sm leading-6 text-zinc-400">
-                  Shield funds from Quick Actions or receive a confidential payment to activate your encrypted balance.
-                </p>
-              </div>
-            ) : null}
           </div>
 
           <button
@@ -192,9 +175,11 @@ export default function BalanceCard() {
         </div>
       </div>
 
-      <div className="mt-4">
-        <Toast message={toast} tone={tone} />
-      </div>
+      {tone === "error" ? (
+        <div className="mt-4">
+          <Toast message={toast} tone={tone} />
+        </div>
+      ) : null}
     </section>
   );
 }

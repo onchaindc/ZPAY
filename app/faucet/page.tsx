@@ -72,17 +72,17 @@ export default function FaucetPage() {
   }
 
   return (
-    <main className="w-full max-w-screen overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
-      <div className="mb-7 max-w-3xl md:mb-9">
+    <main className="mx-auto w-full max-w-[640px] overflow-x-hidden px-4 py-8 md:px-8 md:py-10">
+      <div className="mx-auto mb-7 max-w-[640px] text-center md:mb-9">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Shield Funds</p>
         <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">Create a confidential balance</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-zinc-400 md:text-base">
           Shield funds into ZamaPay&apos;s confidential payment layer. Balances are encrypted with
           Zama FHE and can be used for confidential payments on Ethereum.
         </p>
       </div>
 
-      <section className="glass w-full rounded-xl p-4 md:max-w-2xl md:p-6">
+      <section className="glass mx-auto w-full rounded-xl p-4 md:p-6">
         <div className="grid gap-5">
           <label className="grid gap-2 text-sm font-semibold text-white">
             Confidential token amount
@@ -106,7 +106,7 @@ export default function FaucetPage() {
             />
           </label>
 
-          <button type="button" onClick={shieldBalance} disabled={loading} className="primary-button md:w-auto">
+          <button type="button" onClick={shieldBalance} disabled={loading} className="primary-button w-full">
             {loading ? <LoadingSpinner className="mr-2" /> : null}
             Shield Funds
           </button>

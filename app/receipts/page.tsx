@@ -48,20 +48,20 @@ export default function ReceiptsPage() {
   }
 
   return (
-    <main className="w-full max-w-screen overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
-      <div className="mb-7 flex flex-col gap-4 md:mb-9 md:flex-row md:items-end md:justify-between">
+    <main className="mx-auto w-full max-w-[640px] overflow-x-hidden px-4 py-8 md:px-8 md:py-10">
+      <div className="mx-auto mb-7 max-w-[640px] text-center md:mb-9">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
           <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">
             Unshield confidential funds.
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400 md:text-base">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-zinc-400 md:text-base">
             Reduce your encrypted ZamaPay vault balance. ETH withdrawals will be enabled after the confidential accounting flow is complete.
           </p>
         </div>
       </div>
 
-      <section className="activity-surface max-w-2xl">
+      <section className="activity-surface mx-auto w-full">
         <div className="mb-6">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Unshield</p>
           <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Update encrypted balance</h2>
@@ -82,7 +82,7 @@ export default function ReceiptsPage() {
             />
           </label>
 
-          <button type="button" onClick={unshieldBalance} disabled={loading} className="primary-button md:w-auto">
+          <button type="button" onClick={unshieldBalance} disabled={loading} className="primary-button w-full">
             {loading ? <LoadingSpinner className="mr-2" /> : null}
             Unshield Funds
           </button>

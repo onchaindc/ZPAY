@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import ConnectButton from "@/components/ConnectButton";
 import NetworkSelector from "@/components/NetworkSelector";
+import ThemeControl from "@/components/ThemeControl";
 import ZamapayLogo from "@/components/ZamapayLogo";
 
 const links = [
@@ -16,8 +16,19 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
   const showBackButton = pathname !== "/" && pathname !== "/dashboard";
+  const mobileTitle =
+    pathname === "/send"
+      ? "Send"
+      : pathname === "/faucet"
+        ? "Shield"
+        : pathname === "/activity"
+          ? "Activity"
+          : pathname === "/profile"
+            ? "Profile"
+            : pathname === "/receipts"
+              ? "Receipts"
+              : "Home";
 
   function goBack() {
     if (window.history.length > 1) {
@@ -28,115 +39,72 @@ export default function Navbar() {
     window.location.href = "/dashboard";
   }
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleEscape);
-
-    return () => {
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [open]);
-
   return (
-    <>
-      <header className="app-topbar">
-        <div className="navbar-row">
-          <div className="navbar-left">
-            <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
-              <ZamapayLogo compact />
-            </Link>
+    <header className="app-topbar">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 md:hidden">
+        <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
+          <ZamapayLogo compact />
+        </Link>
 
-            {showBackButton ? (
-              <button
-                type="button"
-                onClick={goBack}
-                className="navbar-back-button"
-                aria-label="Go back"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
-                </svg>
-              </button>
-            ) : null}
-          </div>
-
+        {showBackButton ? (
           <button
             type="button"
-            onClick={() => setOpen((current) => !current)}
-            className="navbar-toggle md:hidden"
-            aria-expanded={open}
-            aria-label="Toggle navigation"
+            onClick={goBack}
+            className="navbar-back-button"
+            aria-label="Go back"
           >
-            <span aria-hidden="true">&#9776;</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
+            </svg>
           </button>
+        ) : (
+          <span className="inline-flex min-h-[2.5rem] items-center rounded-full border border-white/10 bg-white/5 px-3 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-zama-soft">
+            {mobileTitle}
+          </span>
+        )}
+      </div>
 
-          <nav className="navbar-links hidden md:flex" aria-label="Primary navigation">
-            {links.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`navbar-link ${active ? "navbar-link-active" : ""}`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
+      <div className="navbar-row hidden md:grid">
+        <div className="navbar-left">
+          <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
+            <ZamapayLogo compact />
+          </Link>
 
-          <div className="navbar-actions hidden md:flex">
-            <NetworkSelector />
-            <ConnectButton compact />
-          </div>
-        </div>
-
-        {open ? (
-          <>
+          {showBackButton ? (
             <button
               type="button"
-              className="mobile-menu-backdrop md:hidden"
-              aria-label="Close navigation"
-              onClick={() => setOpen(false)}
-            />
-            <aside className="mobile-menu md:hidden" aria-label="Mobile navigation menu">
-              <nav className="mobile-menu-nav" aria-label="Mobile navigation">
-                {links.map((link) => {
-                  const active = pathname === link.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      className={`navbar-link ${active ? "navbar-link-active" : ""}`}
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </nav>
+              onClick={goBack}
+              className="navbar-back-button"
+              aria-label="Go back"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
+              </svg>
+            </button>
+          ) : null}
+        </div>
 
-              <div className="mobile-menu-controls">
-                <NetworkSelector />
-                <ConnectButton compact />
-              </div>
-            </aside>
-          </>
-        ) : null}
-      </header>
-    </>
+        <nav className="navbar-links" aria-label="Primary navigation">
+          {links.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`navbar-link ${active ? "navbar-link-active" : ""}`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="navbar-actions">
+          <ThemeControl variant="inline" />
+          <NetworkSelector />
+          <ConnectButton compact />
+        </div>
+      </div>
+    </header>
   );
 }

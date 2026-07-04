@@ -176,10 +176,10 @@ export default function SendForm({ compact = false }: SendFormProps) {
 
             <button type="button" className="send-receipt-toggle" aria-pressed={false} disabled>
               <span className="min-w-0">
-                <span className="block text-sm font-bold uppercase tracking-[0.18em] text-zama-soft">Selective proof</span>
-                <span className="mt-2 block text-base font-black text-white">Selective receipts</span>
+                <span className="block text-sm font-bold uppercase tracking-[0.18em] text-zama-soft">Receipt history</span>
+                <span className="mt-2 block text-base font-black text-white">On-chain receipts</span>
                 <span className="mt-1 block text-sm leading-6 text-zinc-400">
-                  Keep payment details confidential today. Export-ready selective receipts arrive in a later vault phase.
+                  Confirmed ZamapayVault events are available in Receipts after settlement.
                 </span>
               </span>
               <span className="ml-4 flex h-7 w-12 shrink-0 items-center rounded-full bg-white/12 p-1 transition">

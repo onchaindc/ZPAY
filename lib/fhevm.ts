@@ -98,6 +98,14 @@ export async function userDecryptBalanceHandle(
   return decrypted[handle] ?? decrypted[handle.toLowerCase() as `0x${string}`];
 }
 
+export async function publicDecryptHandle(encryptedHandle: unknown) {
+  const fhevm = await getFhevmInstance();
+  const handle = normalizeHandle(encryptedHandle);
+  const decrypted = await fhevm.publicDecrypt([handle]);
+
+  return decrypted.clearValues[handle] ?? decrypted.clearValues[handle.toLowerCase() as `0x${string}`];
+}
+
 export function resetInstance() {
   instance = null;
 }

@@ -37,7 +37,7 @@ const quickActions = [
 
 export default function DashboardPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
+    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 pb-28 pt-6 md:px-8 md:py-8">
       <div className="mx-auto mb-7 max-w-3xl text-center md:mb-9">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
         <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">
@@ -59,7 +59,28 @@ export default function DashboardPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div className="grid grid-cols-3 gap-3 md:hidden">
+            <Link href="/faucet" className="glass flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-[20px] p-3 text-center">
+              <span className="grid h-10 w-10 place-items-center rounded-[14px] border border-zama-gold/20 bg-zama-gold/10 text-zama-soft">
+                {quickActions[0].icon}
+              </span>
+              <span className="text-sm font-black text-white">Shield</span>
+            </Link>
+            <Link href="/send" className="glass flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-[20px] p-3 text-center">
+              <span className="grid h-10 w-10 place-items-center rounded-[14px] border border-zama-gold/20 bg-zama-gold/10 text-zama-soft">
+                {quickActions[1].icon}
+              </span>
+              <span className="text-sm font-black text-white">Send</span>
+            </Link>
+            <Link href="/receipts" className="glass flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-[20px] p-3 text-center">
+              <span className="grid h-10 w-10 place-items-center rounded-[14px] border border-zama-gold/20 bg-zama-gold/10 text-zama-soft">
+                {quickActions[2].icon}
+              </span>
+              <span className="text-sm font-black text-white">Withdraw</span>
+            </Link>
+          </div>
+
+          <div className="hidden grid-cols-1 gap-3 md:grid md:grid-cols-3">
             {quickActions.map((action) => (
               <Link key={action.title} href={action.href} className="dashboard-action-card">
                 <span className="dashboard-action-icon">{action.icon}</span>

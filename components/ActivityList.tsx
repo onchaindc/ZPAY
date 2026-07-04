@@ -1,114 +1,36 @@
 "use client";
 
-import { BrowserProvider } from "ethers";
 import { useEffect, useState } from "react";
-import { getZamapayContract } from "@/lib/contract";
+import Toast from "@/components/Toast";
 import TransactionRow from "@/components/TransactionRow";
-
-type ActivityItem = {
-  id: string;
-  address: string;
-  timestamp: number;
-  label: string;
-};
-
-type VaultEvent = {
-  args: Record<string, unknown>;
-  blockNumber: number;
-  eventName: string;
-  index: number;
-  transactionHash: string;
-};
-
-function isVaultEvent(event: unknown): event is VaultEvent {
-  return (
-    typeof event === "object" &&
-    event !== null &&
-    "args" in event &&
-    "blockNumber" in event &&
-    "eventName" in event &&
-    "index" in event &&
-    "transactionHash" in event
-  );
-}
+import { getFriendlyErrorMessage } from "@/lib/ui";
+import { loadVaultEventsForConnectedUser, type VaultEventItem } from "@/lib/vaultEvents";
 
 export default function ActivityList() {
-  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [activity, setActivity] = useState<VaultEventItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
 
     async function loadActivity() {
-      if (!window.ethereum) {
-        if (active) {
-          setActivity([]);
-        }
-        return;
-      }
-
       try {
-        const accounts = (await window.ethereum.request({ method: "eth_accounts" })) as string[];
-        const userAddress = accounts[0];
+        setLoading(true);
+        setError("");
+        const events = await loadVaultEventsForConnectedUser();
 
-        if (!userAddress) {
-          if (active) {
-            setActivity([]);
-          }
-          return;
+        if (active) {
+          setActivity(events);
         }
-
-        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner(userAddress);
-        const contract = getZamapayContract(signer);
-        const events = await Promise.all([
-          contract.queryFilter(contract.filters.Shielded(userAddress, null)),
-          contract.queryFilter(contract.filters.Transferred(userAddress, null)),
-          contract.queryFilter(contract.filters.Transferred(null, userAddress)),
-          contract.queryFilter(contract.filters.Unshielded(userAddress)),
-        ]);
-
-        const flattenedEvents: unknown[] = events.flat();
-        const uniqueEvents = Array.from(
-          new Map<string, VaultEvent>(
-            flattenedEvents
-              .filter(isVaultEvent)
-              .map((event) => [`${event.transactionHash}-${event.index}`, event])
-          ).values()
-        );
-
-        const rows = await Promise.all(
-          uniqueEvents.map(async (event) => {
-            const block = await provider.getBlock(event.blockNumber);
-            const from = String(event.args.from ?? event.args.user ?? userAddress);
-            const to = String(event.args.to ?? event.args.user ?? userAddress);
-            const outgoing = from.toLowerCase() === userAddress.toLowerCase();
-            const label =
-              event.eventName === "Shielded"
-                ? "Shielded"
-                : event.eventName === "Unshielded"
-                  ? "Unshielded"
-                  : outgoing
-                    ? "Sent"
-                    : "Received";
-
-            return {
-              id: `${event.transactionHash}-${event.index}`,
-              address: outgoing ? to : from,
-              timestamp: block?.timestamp ?? 0,
-              label,
-            };
-          })
-        );
-
-        if (!active) {
-          return;
-        }
-
-        rows.sort((a, b) => b.timestamp - a.timestamp);
-        setActivity(rows);
-      } catch {
+      } catch (loadError) {
         if (active) {
           setActivity([]);
+          setError(getFriendlyErrorMessage(loadError, "network"));
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
         }
       }
     }
@@ -121,11 +43,13 @@ export default function ActivityList() {
 
     window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
     window.ethereum?.on?.("chainChanged", handleWalletStateChange);
+    window.addEventListener("zamapay:network", handleWalletStateChange as EventListener);
 
     return () => {
       active = false;
       window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
       window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
+      window.removeEventListener("zamapay:network", handleWalletStateChange as EventListener);
     };
   }, []);
 
@@ -134,32 +58,46 @@ export default function ActivityList() {
       <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Recent Activity</p>
-          <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Confidential transfers</h2>
+          <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Vault event history</h2>
         </div>
         <span className="text-sm font-semibold text-zinc-500">{activity.length} events</span>
       </div>
 
-      {activity.length ? (
-        <div>
-          {activity.map((transaction) => (
-            <TransactionRow
-              key={transaction.id}
-              address={transaction.address}
-              timestamp={transaction.timestamp}
-              label={transaction.label}
-            />
+      {error ? (
+        <div className="mb-4">
+          <Toast message={error} tone="error" />
+        </div>
+      ) : null}
+
+      {loading ? (
+        <div className="grid gap-3">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="activity-skeleton-card">
+              <div className="activity-timeline-marker" aria-hidden="true" />
+              <div className="grid gap-3">
+                <div className="activity-skeleton-line h-4 w-28" />
+                <div className="activity-skeleton-line h-4 w-40" />
+                <div className="activity-skeleton-line h-16 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : activity.length ? (
+        <div className="activity-timeline grid gap-3">
+          {activity.map((item) => (
+            <TransactionRow key={item.id} item={item} />
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.035] px-4 py-10 text-center md:px-6">
+        <div className="activity-empty-state px-4 py-10 text-center md:px-6">
           <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-zama-gold/20 bg-zama-gold/10 text-zama-gold">
             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden="true">
               <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.8-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Zm2 6h6V7H9v2Zm0 4h6v-2H9v2Z" />
             </svg>
           </div>
-          <p className="mt-4 font-black text-white">No confidential activity yet</p>
+          <p className="mt-4 font-black text-white">No vault events found</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Shield funds or send your first confidential payment. Confirmed activity will appear here automatically.
+            Connect the wallet that used ZamapayVault to load shield, transfer, and unshield activity.
           </p>
         </div>
       )}

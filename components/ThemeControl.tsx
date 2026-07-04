@@ -6,11 +6,12 @@ type ThemeMode = "dark" | "light";
 
 type ThemeControlProps = {
   landing?: boolean;
+  variant?: "floating" | "inline";
 };
 
 const THEME_STORAGE_KEY = "zamapay:theme";
 
-export default function ThemeControl({ landing = false }: ThemeControlProps) {
+export default function ThemeControl({ landing = false, variant = "floating" }: ThemeControlProps) {
   const [theme, setTheme] = useState<ThemeMode>("dark");
 
   useEffect(() => {
@@ -34,7 +35,11 @@ export default function ThemeControl({ landing = false }: ThemeControlProps) {
     <button
       type="button"
       onClick={toggleTheme}
-      className={`theme-toggle ${landing ? "theme-toggle-landing" : ""}`}
+      className={
+        variant === "inline"
+          ? "inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[color:var(--theme-text)] transition duration-200 hover:border-zama-gold/40 hover:bg-zama-gold/10"
+          : `theme-toggle ${landing ? "theme-toggle-landing" : ""}`
+      }
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
       title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
     >

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import ThemeControl from "@/components/ThemeControl";
 
 type AppChromeProps = {
@@ -15,8 +16,9 @@ export default function AppChrome({ children }: AppChromeProps) {
   return (
     <>
       {landing ? null : <Navbar />}
-      <ThemeControl landing={landing} />
+      {landing ? <ThemeControl landing={landing} /> : null}
       <div className={landing ? "app-shell app-shell-landing" : "app-shell"}>{children}</div>
+      {landing ? null : <MobileBottomNav />}
     </>
   );
 }

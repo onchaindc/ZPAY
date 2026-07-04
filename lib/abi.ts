@@ -34,6 +34,16 @@ export const ZAMAPAY_ABI = [
   },
   {
     anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "uint256", name: "requestId", type: "uint256" },
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      { indexed: false, internalType: "bytes32", name: "amountHandle", type: "bytes32" }
+    ],
+    name: "UnshieldRequested",
+    type: "event"
+  },
+  {
+    anonymous: false,
     inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }],
     name: "Unshielded",
     type: "event"
@@ -50,6 +60,17 @@ export const ZAMAPAY_ABI = [
     name: "confidentialProtocolId",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "requestId", type: "uint256" },
+      { internalType: "bytes", name: "abiEncodedCleartexts", type: "bytes" },
+      { internalType: "bytes", name: "decryptionProof", type: "bytes" }
+    ],
+    name: "finalizeUnshield",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function"
   },
   {

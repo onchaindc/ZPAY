@@ -1170,7 +1170,7 @@ button:disabled {
   }
 }
 
-@media (min-width: 768px) {
+  @media (min-width: 768px) {
   @layer components {
     .app-topbar {
       padding-left: 0.875rem;
@@ -1203,7 +1203,7 @@ button:disabled {
     }
 
     .balance-hero {
-      padding: 1.75rem;
+      padding: 1.25rem;
     }
 
     .balance-reveal-button {
@@ -1213,13 +1213,13 @@ button:disabled {
     .send-input-group,
     .send-receipt-toggle,
     .send-summary-panel {
-      padding: 1.25rem;
+      padding: 1rem;
     }
 
     .activity-surface,
     .activity-card,
     .activity-skeleton-card {
-      padding: 1.25rem;
+      padding: 1rem;
     }
 
     .activity-card,

@@ -140,12 +140,12 @@ export default function BalanceCard() {
               </p>
             </div>
 
-            <div className="mt-6 min-h-[5.5rem]">
+            <div className="mt-4 min-h-[4.5rem] md:min-h-[5rem]">
               {loading ? (
                 <div className="balance-skeleton" aria-label="Loading balance" />
               ) : (
                 <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
-                  <span className="status-text text-4xl font-black leading-none text-white md:text-6xl lg:text-7xl">
+                  <span className="status-text text-4xl font-black leading-none text-white md:text-5xl lg:text-6xl">
                     {balanceLabel}
                   </span>
                   {revealState === "real" ? (
@@ -157,7 +157,7 @@ export default function BalanceCard() {
               )}
             </div>
 
-            <div className="mt-5 flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
+            <div className="mt-4 flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
               <span className="balance-network-pill">{networkName}</span>
             </div>
 

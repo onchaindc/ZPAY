@@ -17,6 +17,7 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const showBackButton = pathname !== "/" && pathname !== "/dashboard";
+  const showMobileThemeToggle = pathname === "/dashboard";
   const mobileTitle =
     pathname === "/send"
       ? "Send"
@@ -57,6 +58,8 @@ export default function Navbar() {
               <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
             </svg>
           </button>
+        ) : showMobileThemeToggle ? (
+          <ThemeControl variant="inline" />
         ) : (
           <span className="inline-flex min-h-[2.5rem] items-center rounded-full border border-white/10 bg-white/5 px-3 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-zama-soft">
             {mobileTitle}

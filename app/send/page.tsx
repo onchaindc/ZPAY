@@ -2,7 +2,7 @@ import SendForm from "@/components/SendForm";
 
 export default function SendPage() {
   return (
-    <main className="mx-auto w-full max-w-5xl overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
+    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 py-6 md:px-8 md:py-8">
       <div className="mx-auto mb-7 max-w-3xl text-center md:mb-9">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Confidential Payment</p>
         <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">

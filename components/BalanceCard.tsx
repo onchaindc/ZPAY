@@ -99,7 +99,7 @@ export default function BalanceCard() {
     } catch (error) {
       setBalance("");
       setRevealState("idle");
-      setToast(getFriendlyErrorMessage(error, "network"));
+      setToast(getFriendlyErrorMessage(error, "balance"));
       setTone("error");
     } finally {
       setLoading(false);
@@ -150,7 +150,7 @@ export default function BalanceCard() {
                   </span>
                   {revealState === "real" ? (
                     <span className="pb-1 text-sm font-bold uppercase tracking-[0.18em] text-zinc-400 md:pb-2">
-                      tokens
+                      ETH
                     </span>
                   ) : null}
                 </div>
@@ -170,7 +170,7 @@ export default function BalanceCard() {
             className="balance-reveal-button"
           >
             {loading ? <LoadingSpinner className="mr-2" /> : null}
-            Reveal Confidential Balance
+            View Balance
           </button>
         </div>
       </div>

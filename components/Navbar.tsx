@@ -17,6 +17,7 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const showBackButton = pathname !== "/" && pathname !== "/dashboard";
 
   function goBack() {
     if (window.history.length > 1) {
@@ -53,20 +54,24 @@ export default function Navbar() {
     <>
       <header className="app-topbar">
         <div className="navbar-row">
-          <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
-            <ZamapayLogo compact />
-          </Link>
+          <div className="navbar-left">
+            <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
+              <ZamapayLogo compact />
+            </Link>
 
-          <button
-            type="button"
-            onClick={goBack}
-            className="navbar-back-button"
-            aria-label="Go back"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
-            </svg>
-          </button>
+            {showBackButton ? (
+              <button
+                type="button"
+                onClick={goBack}
+                className="navbar-back-button"
+                aria-label="Go back"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M15.7 5.3 9 12l6.7 6.7-1.4 1.4L6.2 12l8.1-8.1 1.4 1.4Z" />
+                </svg>
+              </button>
+            ) : null}
+          </div>
 
           <button
             type="button"

@@ -38,14 +38,14 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
 
       if (!decrypted || decrypted === "0") {
         setAmount("");
-        setToast("Amount is zero or could not be decrypted.");
+        setToast("No encrypted amount is available yet.");
         setTone("idle");
         return;
       }
 
       setAmount(decrypted);
-      setToast("Amount revealed locally.");
-      setTone("success");
+      setToast("");
+      setTone("idle");
     } catch (error) {
       setToast(getFriendlyErrorMessage(error, "network"));
       setTone("error");
@@ -85,13 +85,13 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
           <p className="mt-3 text-3xl font-black leading-none text-white md:text-4xl">
             {loading ? <span className="activity-skeleton-line block h-10 w-24" aria-label="Loading amount" /> : amount || "\u2022\u2022\u2022\u2022"}
           </p>
-          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Confidential tokens</p>
+          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Confidential ETH</p>
         </div>
       </div>
 
       <button type="button" onClick={revealAmount} disabled={loading} className="secondary-button mt-6 md:w-auto">
         {loading ? <LoadingSpinner className="mr-2" /> : null}
-        Reveal Amount Locally
+        View Amount
       </button>
 
       <div className="mt-4">

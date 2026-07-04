@@ -2,7 +2,7 @@ import { formatEther, parseEther } from "ethers";
 
 export function getFriendlyErrorMessage(
   error: unknown,
-  fallback: "network" | "contract" | "generic" = "generic"
+  fallback: "network" | "contract" | "balance" | "generic" = "generic"
 ) {
   const message = error instanceof Error ? error.message.toLowerCase() : "";
 
@@ -33,21 +33,35 @@ export function getFriendlyErrorMessage(
   }
 
   if (
+    message.includes("chain") ||
+    message.includes("wrong network") ||
+    message.includes("unsupported network") ||
+    message.includes("switch network")
+  ) {
+    return "Chain request failed.";
+  }
+
+  if (
     message.includes("rpc") ||
     message.includes("network") ||
     message.includes("timeout") ||
     message.includes("fetch") ||
-    message.includes("bad gateway")
+    message.includes("bad gateway") ||
+    message.includes("gateway timeout")
   ) {
-    return "Network error. Please try again.";
+    return "Unable to reach the selected RPC.";
   }
 
   if (fallback === "contract") {
-    return "Transaction failed. Check your balance.";
+    return "Chain request failed.";
   }
 
   if (fallback === "network") {
-    return "Network error. Please try again.";
+    return "Unable to reach the selected RPC.";
+  }
+
+  if (fallback === "balance") {
+    return "Unable to fetch encrypted balance.";
   }
 
   return "Something went wrong. Please try again.";

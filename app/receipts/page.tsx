@@ -19,7 +19,7 @@ export default function ReceiptsPage() {
 
     const parsedAmount = parseTokenAmount(amount);
     if (!parsedAmount) {
-      setToast("Enter a whole number of tokens greater than zero.");
+      setToast("Enter a whole ETH amount greater than zero.");
       setTone("error");
       return;
     }
@@ -36,7 +36,7 @@ export default function ReceiptsPage() {
 
       setToast(`Unshield transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
-      setToast(`Unshielded ${formatTokenAmount(parsedAmount)} confidential tokens.`);
+      setToast(`Unshielded ${formatTokenAmount(parsedAmount)} confidential ETH.`);
       setTone("success");
       setAmount("");
     } catch (error) {
@@ -53,10 +53,10 @@ export default function ReceiptsPage() {
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
           <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">
-            Unshield confidential funds.
+            Withdraw confidential ETH.
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-zinc-400 md:text-base">
-            Reduce your encrypted ZamaPay vault balance. ETH withdrawals will be enabled after the confidential accounting flow is complete.
+            Unshield value from your confidential vault balance and settle back into standard ETH.
           </p>
         </div>
       </div>
@@ -64,15 +64,15 @@ export default function ReceiptsPage() {
       <section className="activity-surface mx-auto w-full">
         <div className="mb-6">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Unshield</p>
-          <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Update encrypted balance</h2>
+          <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Request an ETH withdrawal</h2>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
-            For now this updates the confidential balance only. No ETH is sent from the vault in this phase.
+            Submit the amount you want to unshield from your encrypted vault balance.
           </p>
         </div>
 
         <div className="grid gap-5">
           <label className="grid gap-2 text-sm font-semibold text-white">
-            Confidential token amount
+            Confidential ETH amount
             <input
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
@@ -84,7 +84,7 @@ export default function ReceiptsPage() {
 
           <button type="button" onClick={unshieldBalance} disabled={loading} className="primary-button w-full">
             {loading ? <LoadingSpinner className="mr-2" /> : null}
-            Unshield Funds
+            Unshield ETH
           </button>
         </div>
 

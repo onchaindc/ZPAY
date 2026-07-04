@@ -12,14 +12,15 @@ export default function Toast({ message, tone = "idle" }: ToastProps) {
 
   const toneClass =
     tone === "success"
-      ? "text-emerald-300"
+      ? "surface-toast-success"
       : tone === "error"
-        ? "text-rose-300"
-        : "text-zinc-400";
+        ? "surface-toast-error"
+        : "surface-toast-idle";
 
   return (
-    <p className={`surface-toast status-text text-sm ${toneClass}`} role="status">
-      {message}
+    <p className={`surface-toast status-text ${toneClass}`} role="status">
+      <span className="surface-toast-indicator" aria-hidden="true" />
+      <span className="min-w-0">{message}</span>
     </p>
   );
 }

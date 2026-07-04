@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { connectWallet, hasMetaMask, truncateAddress } from "@/lib/contract";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import Toast from "@/components/Toast";
 import { getFriendlyErrorMessage } from "@/lib/ui";
 
 type ConnectButtonProps = {
@@ -78,7 +79,11 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
         {loading ? <LoadingSpinner className="mr-2" /> : null}
         <span className="truncate">{address ? truncateAddress(address) : "Connect Wallet"}</span>
       </button>
-      {error ? <p className="status-text max-w-52 text-xs text-rose-300">{error}</p> : null}
+      {error ? (
+        <div className="w-full max-w-52">
+          <Toast message={error} tone="error" />
+        </div>
+      ) : null}
     </div>
   );
 }

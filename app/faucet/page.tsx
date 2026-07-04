@@ -28,7 +28,7 @@ export default function FaucetPage() {
 
     const parsedAmount = parseTokenAmount(amount);
     if (!parsedAmount) {
-      setToast("Enter a whole number of tokens greater than zero.");
+      setToast("Enter a whole ETH amount greater than zero.");
       setTone("error");
       return;
     }
@@ -61,7 +61,7 @@ export default function FaucetPage() {
 
       setToast(`Shield transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
-      setToast(`Shielded ${amount} confidential tokens to ${truncateAddress(wallet.address)}.`);
+      setToast(`Shielded ${amount} confidential ETH to ${truncateAddress(wallet.address)}.`);
       setTone("success");
     } catch (error) {
       setToast(getFriendlyErrorMessage(error, "contract"));
@@ -75,7 +75,7 @@ export default function FaucetPage() {
     <main className="mx-auto w-full max-w-[640px] overflow-x-hidden px-4 py-8 md:px-8 md:py-10">
       <div className="mx-auto mb-7 max-w-[640px] text-center md:mb-9">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Shield Funds</p>
-        <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">Create a confidential balance</h1>
+        <h1 className="mt-3 text-3xl font-black leading-tight text-white md:text-5xl">Shield ETH into your vault</h1>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-zinc-400 md:text-base">
           Shield funds into ZamaPay&apos;s confidential payment layer. Balances are encrypted with
           Zama FHE and can be used for confidential payments on Ethereum.
@@ -85,7 +85,7 @@ export default function FaucetPage() {
       <section className="glass mx-auto w-full rounded-xl p-4 md:p-6">
         <div className="grid gap-5">
           <label className="grid gap-2 text-sm font-semibold text-white">
-            Confidential token amount
+            Confidential ETH amount
             <input
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
@@ -108,7 +108,7 @@ export default function FaucetPage() {
 
           <button type="button" onClick={shieldBalance} disabled={loading} className="primary-button w-full">
             {loading ? <LoadingSpinner className="mr-2" /> : null}
-            Shield Funds
+            Shield ETH
           </button>
         </div>
 

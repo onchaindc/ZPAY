@@ -52,7 +52,7 @@ function normalizeClearValue(value: unknown) {
   return null;
 }
 
-async function getConnectedAddress(provider: BrowserProvider) {
+async function getConnectedAddress() {
   const accounts = (await window.ethereum?.request?.({ method: "eth_accounts" })) as string[] | undefined;
   return accounts?.[0] ?? "";
 }
@@ -63,7 +63,7 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
   }
 
   const provider = new BrowserProvider(window.ethereum);
-  const userAddress = await getConnectedAddress(provider);
+  const userAddress = await getConnectedAddress();
 
   if (!userAddress) {
     return [];

@@ -5,6 +5,7 @@ import Toast from "@/components/Toast";
 import { truncateAddress } from "@/lib/contract";
 import { formatRelativeTime, getFriendlyErrorMessage } from "@/lib/ui";
 import {
+  loadCachedVaultEventsForConnectedUser,
   loadVaultEventsForConnectedUser,
   subscribeToVaultEventsForConnectedUser,
   type VaultEventItem,
@@ -114,10 +115,21 @@ export default function ReceiptsList() {
   useEffect(() => {
     let active = true;
     let unsubscribe: (() => void) | undefined;
+    let hydratedFromCache = false;
+
+    void loadCachedVaultEventsForConnectedUser().then((cachedEvents) => {
+      if (!active || !cachedEvents?.length) {
+        return;
+      }
+
+      hydratedFromCache = true;
+      setReceipts(cachedEvents);
+      setLoading(false);
+    });
 
     async function loadReceipts() {
       try {
-        if (active) {
+        if (active && !hydratedFromCache) {
           setLoading(true);
         }
         setError("");

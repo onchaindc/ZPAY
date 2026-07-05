@@ -880,30 +880,55 @@ button:disabled {
   .activity-preview-card {
     width: 100%;
     text-align: left;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
   }
 
-  .activity-preview-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1rem 1.25rem;
-    align-items: start;
+  .activity-preview-top {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
-  .activity-preview-amount {
-    min-width: 7rem;
-    text-align: right;
+  .activity-preview-main {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .activity-preview-copy {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .activity-preview-copy > div:first-child {
+    min-width: 0;
+  }
+
+  .activity-preview-copy p:first-child {
+    overflow-wrap: anywhere;
   }
 
   .activity-preview-meta {
-    grid-column: 1 / -1;
+    margin-top: 0.75rem;
     display: flex;
     min-width: 0;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: start;
     justify-content: space-between;
     gap: 0.75rem 1rem;
     color: rgb(161 161 170);
     font-size: 0.875rem;
+  }
+
+  .activity-preview-amount {
+    min-width: 7.5rem;
+    flex: 0 0 auto;
+    text-align: right;
   }
 
   .activity-inline-action {
@@ -947,6 +972,24 @@ button:disabled {
   html[data-theme="light"] .activity-card-button:hover,
   html[data-theme="light"] .activity-card-button:focus-visible {
     background: rgba(39, 35, 26, 0.055);
+  }
+
+  html[data-theme="light"] .activity-status-success {
+    border-color: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.16);
+    color: #171510;
+  }
+
+  html[data-theme="light"] .activity-status-pending {
+    border-color: rgba(184, 134, 11, 0.22);
+    background: rgba(250, 204, 21, 0.18);
+    color: #171510;
+  }
+
+  html[data-theme="light"] .activity-status-neutral {
+    border-color: rgba(39, 35, 26, 0.14);
+    background: rgba(39, 35, 26, 0.08);
+    color: #171510;
   }
 
   .modal-overlay {
@@ -1315,8 +1358,8 @@ button:disabled {
       width: auto;
     }
 
-    .activity-preview-layout {
-      grid-template-columns: minmax(0, 1fr);
+    .activity-preview-top {
+      flex-direction: column;
       gap: 0.85rem;
     }
 

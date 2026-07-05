@@ -5,6 +5,7 @@ import Toast from "@/components/Toast";
 import TransactionRow, { getEventIcon, getStatusTone } from "@/components/TransactionRow";
 import { getFriendlyErrorMessage, formatRelativeTime } from "@/lib/ui";
 import {
+  loadCachedVaultEventsForConnectedUser,
   loadVaultEventsForConnectedUser,
   subscribeToVaultEventsForConnectedUser,
   type VaultEventItem,
@@ -18,13 +19,13 @@ function ActivityPreview({ item, onOpen }: { item: VaultEventItem; onOpen: () =>
     <button type="button" className="activity-card activity-card-button activity-preview-card" onClick={onOpen}>
       <div className="activity-timeline-marker" aria-hidden="true" />
 
-      <div className="activity-preview-layout">
-        <div className="flex min-w-0 items-start gap-3">
+      <div className="activity-preview-top">
+        <div className="activity-preview-main">
           <span className="activity-event-icon" aria-hidden="true">
             {getEventIcon(item.variant)}
           </span>
 
-          <div className="min-w-0 flex-1">
+          <div className="activity-preview-copy">
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-base font-black text-white">{item.title}</p>
               <span className={`activity-status-badge ${getStatusTone(item.status)}`}>{item.status}</span>
@@ -37,20 +38,20 @@ function ActivityPreview({ item, onOpen }: { item: VaultEventItem; onOpen: () =>
           <p className="text-base font-black text-white">{item.amountLabel}</p>
           <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{relativeTime}</p>
         </div>
+      </div>
 
-        <div className="activity-preview-meta">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <span className="activity-hash-chip">{item.txHash.slice(0, 10)}...{item.txHash.slice(-6)}</span>
-            <span>{item.networkName}</span>
-          </div>
-
-          <span className="inline-flex items-center gap-2 font-semibold text-zama-soft">
-            See all
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-              <path d="m9 6 6 6-6 6-1.4-1.4 4.6-4.6-4.6-4.6L9 6Z" />
-            </svg>
-          </span>
+      <div className="activity-preview-meta">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <span className="activity-hash-chip">{item.txHash.slice(0, 10)}...{item.txHash.slice(-6)}</span>
+          <span>{item.networkName}</span>
         </div>
+
+        <span className="inline-flex items-center gap-2 font-semibold text-zama-soft">
+          See all
+          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+            <path d="m9 6 6 6-6 6-1.4-1.4 4.6-4.6-4.6-4.6L9 6Z" />
+          </svg>
+        </span>
       </div>
     </button>
   );
@@ -65,10 +66,21 @@ export default function ActivityList() {
   useEffect(() => {
     let active = true;
     let unsubscribe: (() => void) | undefined;
+    let hydratedFromCache = false;
+
+    void loadCachedVaultEventsForConnectedUser().then((cachedEvents) => {
+      if (!active || !cachedEvents?.length) {
+        return;
+      }
+
+      hydratedFromCache = true;
+      setActivity(cachedEvents);
+      setLoading(false);
+    });
 
     async function loadActivity() {
       try {
-        if (active) {
+        if (active && !hydratedFromCache) {
           setLoading(true);
         }
         setError("");

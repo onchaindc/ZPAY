@@ -4,6 +4,8 @@ import { isConfiguredContractAddress, getSelectedNetwork, truncateAddress } from
 import { publicDecryptHandle } from "@/lib/fhevm";
 
 export const VAULT_ACTIVITY_EVENT = "zpay:activity";
+const VAULT_EVENTS_CACHE_PREFIX = "zpay:vault-events";
+const VAULT_EVENTS_CACHE_TTL_MS = 60_000;
 
 export type VaultEventType = "Shielded" | "Transferred" | "UnshieldRequested" | "Unshielded";
 export type VaultEventVariant = "shielded" | "sent" | "received" | "unshield-requested" | "unshielded";
@@ -48,6 +50,7 @@ const SEPOLIA_LOG_RPC_FALLBACKS = [
   "https://eth-sepolia.g.alchemy.com/v2/Rb4zCUqWcgclddPU7dqz4DThjdQmkMC8",
   "https://sepolia.gateway.tenderly.co"
 ];
+const MEMORY_EVENT_CACHE = new Map<string, { timestamp: number; items: VaultEventItem[] }>();
 
 function isEventLog(log: unknown): log is EventLog {
   return typeof log === "object" && log !== null && "args" in log;
@@ -84,6 +87,58 @@ export function notifyVaultActivityChanged() {
 
 function isAddressMatch(candidate: string, expected: string) {
   return candidate.toLowerCase() === expected.toLowerCase();
+}
+
+function getVaultEventsCacheKey(address: string, chainId: number, contractAddress: string) {
+  return `${VAULT_EVENTS_CACHE_PREFIX}:${chainId}:${contractAddress.toLowerCase()}:${address.toLowerCase()}`;
+}
+
+function readVaultEventsCache(cacheKey: string) {
+  const memoryEntry = MEMORY_EVENT_CACHE.get(cacheKey);
+  if (memoryEntry && Date.now() - memoryEntry.timestamp <= VAULT_EVENTS_CACHE_TTL_MS) {
+    return memoryEntry.items;
+  }
+
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const rawValue = window.sessionStorage.getItem(cacheKey);
+    if (!rawValue) {
+      return null;
+    }
+
+    const parsed = JSON.parse(rawValue) as { timestamp?: number; items?: VaultEventItem[] };
+    if (!parsed.timestamp || !Array.isArray(parsed.items)) {
+      return null;
+    }
+
+    if (Date.now() - parsed.timestamp > VAULT_EVENTS_CACHE_TTL_MS) {
+      window.sessionStorage.removeItem(cacheKey);
+      return null;
+    }
+
+    MEMORY_EVENT_CACHE.set(cacheKey, { timestamp: parsed.timestamp, items: parsed.items });
+    return parsed.items;
+  } catch {
+    return null;
+  }
+}
+
+function writeVaultEventsCache(cacheKey: string, items: VaultEventItem[]) {
+  const entry = { timestamp: Date.now(), items };
+  MEMORY_EVENT_CACHE.set(cacheKey, entry);
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.sessionStorage.setItem(cacheKey, JSON.stringify(entry));
+  } catch {
+    return;
+  }
 }
 
 function getRpcCandidates(rpcUrl: string) {
@@ -372,6 +427,8 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
     return [];
   }
 
+  const cacheKey = getVaultEventsCacheKey(userAddress, selectedNetwork.chainId, contractAddress);
+
   const walletProvider = new BrowserProvider(window.ethereum);
   await walletProvider.send("eth_accounts", []);
 
@@ -379,7 +436,9 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
 
   for (const rpcUrl of getRpcCandidates(selectedNetwork.rpcUrl)) {
     try {
-      return await loadVaultEventsFromRpc(rpcUrl, userAddress, selectedNetwork);
+      const items = await loadVaultEventsFromRpc(rpcUrl, userAddress, selectedNetwork);
+      writeVaultEventsCache(cacheKey, items);
+      return items;
     } catch (error) {
       lastError = error;
       if (!shouldTryNextRpc(error)) {
@@ -389,6 +448,25 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
   }
 
   throw lastError ?? new Error("Unable to load vault activity from the RPC.");
+}
+
+export async function loadCachedVaultEventsForConnectedUser() {
+  if (typeof window === "undefined" || !window.ethereum) {
+    return null;
+  }
+
+  const userAddress = await getConnectedAddress();
+  if (!userAddress) {
+    return null;
+  }
+
+  const selectedNetwork = getSelectedNetwork();
+  const contractAddress = selectedNetwork.contractAddress;
+  if (!isConfiguredContractAddress(contractAddress)) {
+    return null;
+  }
+
+  return readVaultEventsCache(getVaultEventsCacheKey(userAddress, selectedNetwork.chainId, contractAddress));
 }
 
 export async function subscribeToVaultEventsForConnectedUser(onChange: () => void) {

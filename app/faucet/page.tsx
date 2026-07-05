@@ -7,6 +7,7 @@ import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import { getFriendlyErrorMessage, parseTokenAmount } from "@/lib/ui";
+import { notifyVaultActivityChanged } from "@/lib/vaultEvents";
 
 export default function FaucetPage() {
   const [amount, setAmount] = useState("100");
@@ -61,6 +62,7 @@ export default function FaucetPage() {
 
       setToast(`Shield transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
+      notifyVaultActivityChanged();
       setToast(`Shielded ${amount} confidential ETH to ${truncateAddress(wallet.address)}.`);
       setTone("success");
     } catch (error) {

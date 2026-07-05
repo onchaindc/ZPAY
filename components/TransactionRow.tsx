@@ -134,7 +134,7 @@ export default function TransactionRow({ item }: TransactionRowProps) {
               className="secondary-button activity-explorer-link"
               onClick={(event) => event.stopPropagation()}
             >
-              View on Sepolia Explorer
+              View on Etherscan
             </a>
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function TransactionRow({ item }: TransactionRowProps) {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
               <a href={item.explorerUrl} target="_blank" rel="noreferrer" className="secondary-button">
-                View on Sepolia Explorer
+                View on Etherscan
               </a>
               <button type="button" className="primary-button" onClick={() => setOpen(false)}>
                 Close

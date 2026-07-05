@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Toast from "@/components/Toast";
 import { truncateAddress } from "@/lib/contract";
 import { formatRelativeTime, getFriendlyErrorMessage } from "@/lib/ui";
-import { loadVaultEventsForConnectedUser, type VaultEventItem } from "@/lib/vaultEvents";
+import {
+  loadVaultEventsForConnectedUser,
+  subscribeToVaultEventsForConnectedUser,
+  type VaultEventItem,
+  VAULT_ACTIVITY_EVENT
+} from "@/lib/vaultEvents";
 
 function getStatusTone(status: string) {
   const normalized = status.toLowerCase();
@@ -20,6 +25,8 @@ function getStatusTone(status: string) {
 }
 
 function ReceiptCard({ item }: { item: VaultEventItem }) {
+  const counterparty = item.counterparty === "Vault" ? "Vault" : item.counterparty;
+
   return (
     <article className="activity-card receipt-card">
       <div className="activity-timeline-marker" aria-hidden="true" />
@@ -40,14 +47,19 @@ function ReceiptCard({ item }: { item: VaultEventItem }) {
             rel="noreferrer"
             className="secondary-button activity-explorer-link"
           >
-            View on Sepolia Explorer
+            View on Etherscan
           </a>
         </div>
 
         <div className="grid gap-3 text-sm text-zinc-300 md:grid-cols-2">
           <div className="activity-detail">
-            <span className="activity-detail-label">Transfer type</span>
+            <span className="activity-detail-label">Event type</span>
             <span className="font-semibold text-white">{item.title}</span>
+          </div>
+
+          <div className="activity-detail">
+            <span className="activity-detail-label">Counterparty</span>
+            <span className="status-text font-semibold text-white">{counterparty}</span>
           </div>
 
           <div className="activity-detail">
@@ -65,11 +77,6 @@ function ReceiptCard({ item }: { item: VaultEventItem }) {
           </div>
 
           <div className="activity-detail">
-            <span className="activity-detail-label">Transaction hash</span>
-            <span className="status-text font-semibold text-white">{truncateAddress(item.txHash)}</span>
-          </div>
-
-          <div className="activity-detail">
             <span className="activity-detail-label">Date</span>
             <span className="font-semibold text-white">{new Date(item.timestamp * 1000).toLocaleString()}</span>
           </div>
@@ -82,6 +89,11 @@ function ReceiptCard({ item }: { item: VaultEventItem }) {
           <div className="activity-detail">
             <span className="activity-detail-label">Status</span>
             <span className="font-semibold text-white">{item.status}</span>
+          </div>
+
+          <div className="activity-detail">
+            <span className="activity-detail-label">Transaction hash</span>
+            <span className="status-text font-semibold text-white">{truncateAddress(item.txHash)}</span>
           </div>
 
           <div className="activity-detail">
@@ -101,10 +113,13 @@ export default function ReceiptsList() {
 
   useEffect(() => {
     let active = true;
+    let unsubscribe: (() => void) | undefined;
 
     async function loadReceipts() {
       try {
-        setLoading(true);
+        if (active) {
+          setLoading(true);
+        }
         setError("");
         const events = await loadVaultEventsForConnectedUser();
 
@@ -124,20 +139,32 @@ export default function ReceiptsList() {
     }
 
     void loadReceipts();
+    void subscribeToVaultEventsForConnectedUser(() => {
+      void loadReceipts();
+    }).then((cleanup) => {
+      unsubscribe = cleanup;
+    });
 
     const handleWalletStateChange = () => {
+      void loadReceipts();
+    };
+
+    const handleActivityChange = () => {
       void loadReceipts();
     };
 
     window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
     window.ethereum?.on?.("chainChanged", handleWalletStateChange);
     window.addEventListener("zpay:network", handleWalletStateChange as EventListener);
+    window.addEventListener(VAULT_ACTIVITY_EVENT, handleActivityChange as EventListener);
 
     return () => {
       active = false;
+      unsubscribe?.();
       window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
       window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
       window.removeEventListener("zpay:network", handleWalletStateChange as EventListener);
+      window.removeEventListener(VAULT_ACTIVITY_EVENT, handleActivityChange as EventListener);
     };
   }, []);
 
@@ -148,7 +175,7 @@ export default function ReceiptsList() {
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Receipts</p>
           <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Sepolia vault receipts</h2>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
-            Receipts are generated directly from confirmed vault events on Sepolia.
+            Chronological encrypted receipt history generated directly from vault events on Sepolia.
           </p>
         </div>
         <span className="text-sm font-semibold text-zinc-500">{receipts.length} receipts</span>
@@ -186,9 +213,9 @@ export default function ReceiptsList() {
               <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.8-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Zm2 6h6V7H9v2Zm0 4h6v-2H9v2Zm0 4h4v-2H9v2Z" />
             </svg>
           </div>
-          <p className="mt-4 font-black text-white">No transactions yet.</p>
+          <p className="mt-4 font-black text-white">No receipts yet.</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Confirmed shield, transfer, and unshield events from Sepolia will appear here automatically.
+            Your encrypted activity will appear here after your first confidential transaction.
           </p>
         </div>
       )}

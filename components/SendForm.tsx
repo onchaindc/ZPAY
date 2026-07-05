@@ -7,6 +7,7 @@ import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import { formatTokenAmount, getFriendlyErrorMessage, parseTokenAmount } from "@/lib/ui";
+import { notifyVaultActivityChanged } from "@/lib/vaultEvents";
 
 type SendFormProps = {
   compact?: boolean;
@@ -99,6 +100,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
 
       setToast(`Transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
+      notifyVaultActivityChanged();
       setToast("Confidential payment confirmed.");
       setTone("success");
       setSuccessSummary({

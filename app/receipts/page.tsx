@@ -7,6 +7,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ReceiptsList from "@/components/ReceiptsList";
 import Toast from "@/components/Toast";
 import { formatTokenAmount, getFriendlyErrorMessage, parseTokenAmount } from "@/lib/ui";
+import { notifyVaultActivityChanged } from "@/lib/vaultEvents";
 
 export default function ReceiptsPage() {
   const [amount, setAmount] = useState("");
@@ -37,6 +38,7 @@ export default function ReceiptsPage() {
 
       setToast(`Unshield transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
+      notifyVaultActivityChanged();
       setToast(`Unshielded ${formatTokenAmount(parsedAmount)} confidential ETH.`);
       setTone("success");
       setAmount("");

@@ -21,15 +21,18 @@ export default function NetworkSelector() {
         return;
       }
 
-      const provider = new BrowserProvider(window.ethereum);
-      const network = await provider.getNetwork();
-      const nextKey = getNetworkKeyForChainId(network.chainId) ?? getSelectedNetworkKey();
-
+      const selectedKey = getSelectedNetworkKey();
       if (mounted) {
-        setNetworkKey(nextKey);
+        setNetworkKey(selectedKey);
       }
 
-      setSelectedNetworkKey(nextKey);
+      const provider = new BrowserProvider(window.ethereum);
+      const network = await provider.getNetwork();
+      const walletKey = getNetworkKeyForChainId(network.chainId);
+
+      if (walletKey === selectedKey) {
+        setSelectedNetworkKey(selectedKey);
+      }
     }
 
     void syncNetworkFromWallet();

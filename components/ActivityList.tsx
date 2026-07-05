@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Toast from "@/components/Toast";
 import TransactionRow from "@/components/TransactionRow";
 import { getFriendlyErrorMessage } from "@/lib/ui";
-import { loadVaultEventsForConnectedUser, type VaultEventItem } from "@/lib/vaultEvents";
+import {
+  loadVaultEventsForConnectedUser,
+  subscribeToVaultEventsForConnectedUser,
+  type VaultEventItem,
+  VAULT_ACTIVITY_EVENT
+} from "@/lib/vaultEvents";
 
 export default function ActivityList() {
   const [activity, setActivity] = useState<VaultEventItem[]>([]);
@@ -13,10 +18,13 @@ export default function ActivityList() {
 
   useEffect(() => {
     let active = true;
+    let unsubscribe: (() => void) | undefined;
 
     async function loadActivity() {
       try {
-        setLoading(true);
+        if (active) {
+          setLoading(true);
+        }
         setError("");
         const events = await loadVaultEventsForConnectedUser();
 
@@ -36,20 +44,32 @@ export default function ActivityList() {
     }
 
     void loadActivity();
+    void subscribeToVaultEventsForConnectedUser(() => {
+      void loadActivity();
+    }).then((cleanup) => {
+      unsubscribe = cleanup;
+    });
 
     const handleWalletStateChange = () => {
+      void loadActivity();
+    };
+
+    const handleActivityChange = () => {
       void loadActivity();
     };
 
     window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
     window.ethereum?.on?.("chainChanged", handleWalletStateChange);
     window.addEventListener("zpay:network", handleWalletStateChange as EventListener);
+    window.addEventListener(VAULT_ACTIVITY_EVENT, handleActivityChange as EventListener);
 
     return () => {
       active = false;
+      unsubscribe?.();
       window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
       window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
       window.removeEventListener("zpay:network", handleWalletStateChange as EventListener);
+      window.removeEventListener(VAULT_ACTIVITY_EVENT, handleActivityChange as EventListener);
     };
   }, []);
 
@@ -95,9 +115,9 @@ export default function ActivityList() {
               <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.8-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Zm2 6h6V7H9v2Zm0 4h6v-2H9v2Z" />
             </svg>
           </div>
-          <p className="mt-4 font-black text-white">No vault events found</p>
+          <p className="mt-4 font-black text-white">No activity yet.</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Connect the wallet that used this vault on Sepolia to load shield, transfer, and unshield activity.
+            Your encrypted activity will appear here after your first confidential transaction.
           </p>
         </div>
       )}

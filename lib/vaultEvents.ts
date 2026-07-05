@@ -4,6 +4,8 @@ import { NETWORKS } from "@/lib/constants";
 import { isConfiguredContractAddress, truncateAddress } from "@/lib/contract";
 import { publicDecryptHandle } from "@/lib/fhevm";
 
+export const VAULT_ACTIVITY_EVENT = "zpay:activity";
+
 export type VaultEventType = "Shielded" | "Transferred" | "UnshieldRequested" | "Unshielded";
 export type VaultEventVariant = "shielded" | "sent" | "received" | "unshield-requested" | "unshielded";
 
@@ -66,6 +68,14 @@ function normalizeClearValue(value: unknown) {
 async function getConnectedAddress() {
   const accounts = (await window.ethereum?.request?.({ method: "eth_accounts" })) as string[] | undefined;
   return accounts?.[0] ?? "";
+}
+
+export function notifyVaultActivityChanged() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new CustomEvent(VAULT_ACTIVITY_EVENT));
 }
 
 function deriveStatus(event: RawVaultEvent, completedUnshieldUsers: Set<string>) {
@@ -270,4 +280,41 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
       requestId: event.requestId
     };
   });
+}
+
+export async function subscribeToVaultEventsForConnectedUser(onChange: () => void) {
+  if (typeof window === "undefined" || !window.ethereum) {
+    return () => undefined;
+  }
+
+  const userAddress = await getConnectedAddress();
+  if (!userAddress) {
+    return () => undefined;
+  }
+
+  const contractAddress = SEPOLIA_NETWORK.contractAddress;
+  if (!isConfiguredContractAddress(contractAddress)) {
+    return () => undefined;
+  }
+
+  const provider = new JsonRpcProvider(SEPOLIA_NETWORK.rpcUrl);
+  const contract = new Contract(contractAddress, VAULT_ABI, provider);
+  const filters = [
+    contract.filters.Shielded(userAddress),
+    contract.filters.Transferred(userAddress, null),
+    contract.filters.Transferred(null, userAddress),
+    contract.filters.UnshieldRequested(null, userAddress),
+    contract.filters.Unshielded(userAddress)
+  ];
+
+  for (const filter of filters) {
+    contract.on(filter, onChange);
+  }
+
+  return () => {
+    for (const filter of filters) {
+      contract.off(filter, onChange);
+    }
+    void provider.destroy();
+  };
 }

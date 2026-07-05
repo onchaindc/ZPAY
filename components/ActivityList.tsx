@@ -97,7 +97,7 @@ export default function ActivityList() {
           </div>
           <p className="mt-4 font-black text-white">No vault events found</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Connect the wallet that used ZamapayVault to load shield, transfer, and unshield activity.
+            Connect the wallet that used ZamapayVault on Sepolia to load shield, transfer, and unshield activity.
           </p>
         </div>
       )}

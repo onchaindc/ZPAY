@@ -2,24 +2,54 @@
 
 import { useEffect, useState } from "react";
 import Toast from "@/components/Toast";
-import { getSelectedNetwork, truncateAddress } from "@/lib/contract";
-import { getFriendlyErrorMessage } from "@/lib/ui";
+import { truncateAddress } from "@/lib/contract";
+import { formatRelativeTime, getFriendlyErrorMessage } from "@/lib/ui";
 import { loadVaultEventsForConnectedUser, type VaultEventItem } from "@/lib/vaultEvents";
 
-function ReceiptCard({ item }: { item: VaultEventItem }) {
-  const explorerBaseUrl = getSelectedNetwork().blockExplorerUrls[0];
+function getStatusTone(status: string) {
+  const normalized = status.toLowerCase();
+  if (normalized === "completed" || normalized === "confirmed") {
+    return "activity-status-success";
+  }
 
+  if (normalized === "pending") {
+    return "activity-status-pending";
+  }
+
+  return "activity-status-neutral";
+}
+
+function ReceiptCard({ item }: { item: VaultEventItem }) {
   return (
-    <article className="activity-card">
+    <article className="activity-card receipt-card">
       <div className="activity-timeline-marker" aria-hidden="true" />
 
       <div className="flex flex-col gap-5">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="activity-badge">{item.type}</span>
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{item.status}</span>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="activity-badge">{item.title}</span>
+              <span className={`activity-status-badge ${getStatusTone(item.status)}`}>{item.status}</span>
+            </div>
+            <p className="mt-2 text-sm text-zinc-400">{formatRelativeTime(item.timestamp)}</p>
+          </div>
+
+          <a
+            href={item.explorerUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="secondary-button activity-explorer-link"
+          >
+            View on Sepolia Explorer
+          </a>
         </div>
 
         <div className="grid gap-3 text-sm text-zinc-300 md:grid-cols-2">
+          <div className="activity-detail">
+            <span className="activity-detail-label">Transfer type</span>
+            <span className="font-semibold text-white">{item.title}</span>
+          </div>
+
           <div className="activity-detail">
             <span className="activity-detail-label">Sender</span>
             <span className="status-text font-semibold text-white">
@@ -28,15 +58,25 @@ function ReceiptCard({ item }: { item: VaultEventItem }) {
           </div>
 
           <div className="activity-detail">
-            <span className="activity-detail-label">Receiver</span>
+            <span className="activity-detail-label">Recipient</span>
             <span className="status-text font-semibold text-white">
               {item.receiver === "Vault" ? "Vault" : truncateAddress(item.receiver)}
             </span>
           </div>
 
           <div className="activity-detail">
-            <span className="activity-detail-label">Amount</span>
-            <span className="status-text font-semibold text-white">{item.amountLabel}</span>
+            <span className="activity-detail-label">Transaction hash</span>
+            <span className="status-text font-semibold text-white">{truncateAddress(item.txHash)}</span>
+          </div>
+
+          <div className="activity-detail">
+            <span className="activity-detail-label">Date</span>
+            <span className="font-semibold text-white">{new Date(item.timestamp * 1000).toLocaleString()}</span>
+          </div>
+
+          <div className="activity-detail">
+            <span className="activity-detail-label">Network</span>
+            <span className="font-semibold text-white">{item.networkName}</span>
           </div>
 
           <div className="activity-detail">
@@ -45,20 +85,8 @@ function ReceiptCard({ item }: { item: VaultEventItem }) {
           </div>
 
           <div className="activity-detail">
-            <span className="activity-detail-label">Timestamp</span>
-            <span className="font-semibold text-white">{new Date(item.timestamp * 1000).toLocaleString()}</span>
-          </div>
-
-          <div className="activity-detail">
-            <span className="activity-detail-label">Transaction hash</span>
-            <a
-              href={`${explorerBaseUrl}/tx/${item.txHash}`}
-              target="_blank"
-              rel="noreferrer"
-              className="status-text font-semibold text-white underline decoration-white/15 underline-offset-4 transition hover:text-zama-soft"
-            >
-              {truncateAddress(item.txHash)}
-            </a>
+            <span className="activity-detail-label">Amount</span>
+            <span className="status-text font-semibold text-white">{item.amountLabel}</span>
           </div>
         </div>
       </div>
@@ -118,9 +146,9 @@ export default function ReceiptsList() {
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Receipts</p>
-          <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Confirmed vault transactions</h2>
+          <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Sepolia vault receipts</h2>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
-            Receipts are generated directly from ZamapayVault events on the selected network.
+            Receipts are generated directly from confirmed ZamapayVault events on Sepolia.
           </p>
         </div>
         <span className="text-sm font-semibold text-zinc-500">{receipts.length} receipts</span>
@@ -160,7 +188,7 @@ export default function ReceiptsList() {
           </div>
           <p className="mt-4 font-black text-white">No transactions yet.</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Confirmed shield, transfer, and unshield events will appear here automatically.
+            Confirmed shield, transfer, and unshield events from Sepolia will appear here automatically.
           </p>
         </div>
       )}

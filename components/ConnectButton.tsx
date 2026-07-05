@@ -69,7 +69,7 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
   }
 
   return (
-    <div className="flex min-w-0 flex-col items-stretch gap-2 md:items-end">
+    <div className="flex min-w-0 flex-col items-stretch gap-2 md:items-center">
       <button
         type="button"
         onClick={handleConnect}
@@ -80,7 +80,7 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
         <span className="truncate">{address ? truncateAddress(address) : "Connect Wallet"}</span>
       </button>
       {error ? (
-        <div className="w-full max-w-52">
+        <div className="w-full max-w-52 self-center">
           <Toast message={error} tone="error" />
         </div>
       ) : null}

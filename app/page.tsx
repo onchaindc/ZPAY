@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ConnectButton from "@/components/ConnectButton";
 import ZpayLogo from "@/components/ZpayLogo";
@@ -9,9 +8,7 @@ import ZpayLogo from "@/components/ZpayLogo";
 export default function LandingPage() {
   const fullLine = "Confidential payments on Ethereum";
   const [typedLine, setTypedLine] = useState("");
-  const [typedDone, setTypedDone] = useState(false);
   const [connectedAddress, setConnectedAddress] = useState("");
-  const router = useRouter();
 
   useEffect(() => {
     const startDelay = window.setTimeout(() => {
@@ -22,7 +19,6 @@ export default function LandingPage() {
 
         if (index >= fullLine.length) {
           window.clearInterval(typeInterval);
-          setTypedDone(true);
         }
       }, 55);
     }, 280);
@@ -31,20 +27,6 @@ export default function LandingPage() {
       window.clearTimeout(startDelay);
     };
   }, []);
-
-  useEffect(() => {
-    if (!typedDone || !connectedAddress) {
-      return;
-    }
-
-    const proceedTimer = window.setTimeout(() => {
-      router.push("/dashboard");
-    }, 420);
-
-    return () => {
-      window.clearTimeout(proceedTimer);
-    };
-  }, [connectedAddress, router, typedDone]);
 
   return (
     <main className="grid min-h-[100dvh] w-full max-w-screen place-items-center overflow-x-hidden p-4 md:p-8">

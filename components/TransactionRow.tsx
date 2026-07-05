@@ -8,7 +8,7 @@ type TransactionRowProps = {
   item: VaultEventItem;
 };
 
-function getEventIcon(variant: VaultEventVariant) {
+export function getEventIcon(variant: VaultEventVariant) {
   switch (variant) {
     case "shielded":
       return (
@@ -43,7 +43,7 @@ function getEventIcon(variant: VaultEventVariant) {
   }
 }
 
-function getStatusTone(status: string) {
+export function getStatusTone(status: string) {
   const normalized = status.toLowerCase();
   if (normalized === "completed" || normalized === "confirmed") {
     return "activity-status-success";

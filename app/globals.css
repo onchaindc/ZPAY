@@ -877,6 +877,37 @@ button:disabled {
     min-width: 0;
   }
 
+  .activity-preview-card {
+    width: 100%;
+    text-align: left;
+  }
+
+  .activity-inline-action {
+    width: auto;
+    gap: 0.45rem;
+    white-space: nowrap;
+  }
+
+  .activity-history-modal {
+    width: min(100%, 72rem);
+    max-height: min(88vh, 56rem);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .activity-history-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .activity-history-scroll {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1237,6 +1268,14 @@ button:disabled {
     .activity-copy-button {
       width: 100%;
       white-space: normal;
+    }
+
+    .activity-inline-action {
+      width: auto;
+    }
+
+    .activity-history-header {
+      align-items: flex-start;
     }
 
     .activity-modal {

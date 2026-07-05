@@ -42,7 +42,12 @@ type RawVaultEvent = {
 };
 
 const DEPLOYMENT_BLOCK_CACHE = new Map<string, number>();
-const LOG_CHUNK_SIZE = 20_000;
+const LOG_CHUNK_SIZE = 2_000;
+const RECENT_LOG_WINDOW = 250_000;
+const SEPOLIA_LOG_RPC_FALLBACKS = [
+  "https://eth-sepolia.g.alchemy.com/v2/Rb4zCUqWcgclddPU7dqz4DThjdQmkMC8",
+  "https://sepolia.gateway.tenderly.co"
+];
 
 function isEventLog(log: unknown): log is EventLog {
   return typeof log === "object" && log !== null && "args" in log;
@@ -81,6 +86,33 @@ function isAddressMatch(candidate: string, expected: string) {
   return candidate.toLowerCase() === expected.toLowerCase();
 }
 
+function getRpcCandidates(rpcUrl: string) {
+  const candidates = [rpcUrl];
+
+  for (const fallbackUrl of SEPOLIA_LOG_RPC_FALLBACKS) {
+    if (!candidates.includes(fallbackUrl)) {
+      candidates.push(fallbackUrl);
+    }
+  }
+
+  return candidates;
+}
+
+function shouldTryNextRpc(error: unknown) {
+  const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+  return (
+    message.includes("eth_getlogs") ||
+    message.includes("request timeout") ||
+    message.includes("archive requests require") ||
+    message.includes("free tier plan") ||
+    message.includes("unable to load vault activity from the rpc") ||
+    message.includes("could not coalesce error") ||
+    message.includes("jsonrpcprovider failed to detect network") ||
+    message.includes("timeout")
+  );
+}
+
 async function findContractDeploymentBlock(provider: JsonRpcProvider, contractAddress: string) {
   const cacheKey = `${provider._getConnection().url}:${contractAddress.toLowerCase()}`;
   const cached = DEPLOYMENT_BLOCK_CACHE.get(cacheKey);
@@ -115,7 +147,7 @@ async function findContractDeploymentBlock(provider: JsonRpcProvider, contractAd
 
 async function queryLogsInChunks(
   contract: Contract,
-  filter: ReturnType<Contract["filters"]["Shielded"]>,
+  filter: Parameters<Contract["queryFilter"]>[0],
   fromBlock: number,
   toBlock: number
 ) {
@@ -130,51 +162,18 @@ async function queryLogsInChunks(
   return logs;
 }
 
-function deriveStatus(event: RawVaultEvent, completedUnshieldUsers: Set<string>) {
-  if (event.variant === "unshield-requested" && completedUnshieldUsers.has(event.sender.toLowerCase())) {
-    return "Completed";
-  }
-
-  return event.status;
-}
-
-function deriveCounterparty(event: RawVaultEvent, currentUser: string) {
-  if (event.variant === "shielded" || event.variant === "unshield-requested" || event.variant === "unshielded") {
-    return "Vault";
-  }
-
-  return event.sender.toLowerCase() === currentUser ? event.receiver : event.sender;
-}
-
-export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[]> {
-  if (typeof window === "undefined" || !window.ethereum) {
-    return [];
-  }
-
-  const userAddress = await getConnectedAddress();
-
-  if (!userAddress) {
-    return [];
-  }
-
-  const selectedNetwork = getSelectedNetwork();
+async function loadVaultEventsFromRpc(rpcUrl: string, userAddress: string, selectedNetwork: ReturnType<typeof getSelectedNetwork>) {
   const contractAddress = selectedNetwork.contractAddress;
-  if (!isConfiguredContractAddress(contractAddress)) {
-    return [];
-  }
-
-  const walletProvider = new BrowserProvider(window.ethereum);
-  await walletProvider.send("eth_accounts", []);
-
-  const provider = new JsonRpcProvider(selectedNetwork.rpcUrl);
+  const provider = new JsonRpcProvider(rpcUrl);
   const contract = new Contract(contractAddress, VAULT_ABI, provider);
   const latestBlock = await provider.getBlockNumber();
   const deploymentBlock = await findContractDeploymentBlock(provider, contractAddress);
+  const fromBlock = Math.max(deploymentBlock, latestBlock - RECENT_LOG_WINDOW);
   const [allShieldedLogs, allTransferredLogs, allUnshieldRequestedLogs, allUnshieldedLogs] = await Promise.all([
-    queryLogsInChunks(contract, contract.filters.Shielded(), deploymentBlock, latestBlock),
-    queryLogsInChunks(contract, contract.filters.Transferred(), deploymentBlock, latestBlock),
-    queryLogsInChunks(contract, contract.filters.UnshieldRequested(), deploymentBlock, latestBlock),
-    queryLogsInChunks(contract, contract.filters.Unshielded(), deploymentBlock, latestBlock)
+    queryLogsInChunks(contract, contract.filters.Shielded(), fromBlock, latestBlock),
+    queryLogsInChunks(contract, contract.filters.Transferred(), fromBlock, latestBlock),
+    queryLogsInChunks(contract, contract.filters.UnshieldRequested(), fromBlock, latestBlock),
+    queryLogsInChunks(contract, contract.filters.Unshielded(), fromBlock, latestBlock)
   ]);
 
   const shieldedLogs = allShieldedLogs.filter((log) => isAddressMatch(String(log.args.user), userAddress));
@@ -317,8 +316,6 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
   const currentUser = userAddress.toLowerCase();
 
   return rawEvents.map((event) => {
-    const sender = event.sender;
-    const receiver = event.receiver;
     const counterparty = deriveCounterparty(event, currentUser);
     const status = deriveStatus(event, completedUnshieldUsers);
 
@@ -328,8 +325,8 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
       variant: event.variant,
       title: event.title,
       amountLabel: event.amountLabel,
-      sender,
-      receiver,
+      sender: event.sender,
+      receiver: event.receiver,
       counterparty: counterparty === "Vault" ? "Vault" : truncateAddress(counterparty),
       timestamp: event.timestamp,
       txHash: event.txHash,
@@ -340,6 +337,58 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
       requestId: event.requestId
     };
   });
+}
+
+function deriveStatus(event: RawVaultEvent, completedUnshieldUsers: Set<string>) {
+  if (event.variant === "unshield-requested" && completedUnshieldUsers.has(event.sender.toLowerCase())) {
+    return "Completed";
+  }
+
+  return event.status;
+}
+
+function deriveCounterparty(event: RawVaultEvent, currentUser: string) {
+  if (event.variant === "shielded" || event.variant === "unshield-requested" || event.variant === "unshielded") {
+    return "Vault";
+  }
+
+  return event.sender.toLowerCase() === currentUser ? event.receiver : event.sender;
+}
+
+export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[]> {
+  if (typeof window === "undefined" || !window.ethereum) {
+    return [];
+  }
+
+  const userAddress = await getConnectedAddress();
+
+  if (!userAddress) {
+    return [];
+  }
+
+  const selectedNetwork = getSelectedNetwork();
+  const contractAddress = selectedNetwork.contractAddress;
+  if (!isConfiguredContractAddress(contractAddress)) {
+    return [];
+  }
+
+  const walletProvider = new BrowserProvider(window.ethereum);
+  await walletProvider.send("eth_accounts", []);
+
+  let lastError: unknown;
+
+  for (const rpcUrl of getRpcCandidates(selectedNetwork.rpcUrl)) {
+    try {
+      return await loadVaultEventsFromRpc(rpcUrl, userAddress, selectedNetwork);
+    } catch (error) {
+      lastError = error;
+      if (!shouldTryNextRpc(error)) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError ?? new Error("Unable to load vault activity from the RPC.");
 }
 
 export async function subscribeToVaultEventsForConnectedUser(onChange: () => void) {
@@ -358,7 +407,7 @@ export async function subscribeToVaultEventsForConnectedUser(onChange: () => voi
     return () => undefined;
   }
 
-  const provider = new JsonRpcProvider(selectedNetwork.rpcUrl);
+  const provider = new JsonRpcProvider(getRpcCandidates(selectedNetwork.rpcUrl)[0]);
   const contract = new Contract(contractAddress, VAULT_ABI, provider);
   const filters = [
     contract.filters.Shielded(),

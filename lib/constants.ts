@@ -11,7 +11,7 @@ export const NETWORKS = {
   sepolia: {
     chainId: 11155111,
     name: "Sepolia Testnet",
-    rpcUrl: "https://rpc.sepolia.org",
+    rpcUrl: "https://ethereum-sepolia-rpc.publicnode.com",
     kmsContractAddress: "0x208De73316E44722e16f6dDFF40881A3e4F86104",
     aclContractAddress: "0xfee8407e2f5e3ee68ad77cae98c434e637f516ec",
     gatewayUrl: "https://gateway.sepolia.zama.ai/",

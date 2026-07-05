@@ -131,13 +131,13 @@ export default function ReceiptsList() {
 
     window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
     window.ethereum?.on?.("chainChanged", handleWalletStateChange);
-    window.addEventListener("zamapay:network", handleWalletStateChange as EventListener);
+    window.addEventListener("zpay:network", handleWalletStateChange as EventListener);
 
     return () => {
       active = false;
       window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
       window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
-      window.removeEventListener("zamapay:network", handleWalletStateChange as EventListener);
+      window.removeEventListener("zpay:network", handleWalletStateChange as EventListener);
     };
   }, []);
 
@@ -148,7 +148,7 @@ export default function ReceiptsList() {
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Receipts</p>
           <h2 className="mt-2 text-xl font-black text-white md:text-2xl">Sepolia vault receipts</h2>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
-            Receipts are generated directly from confirmed ZamapayVault events on Sepolia.
+            Receipts are generated directly from confirmed vault events on Sepolia.
           </p>
         </div>
         <span className="text-sm font-semibold text-zinc-500">{receipts.length} receipts</span>

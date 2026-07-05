@@ -1,6 +1,6 @@
 // ABI generated from ZamapayVault deployed on Sepolia:
 // 0xF32bcD889C5E63584dba4b36D40Dfcfc3f448693
-export const ZAMAPAY_ABI = [
+export const VAULT_ABI = [
   {
     inputs: [
       { internalType: "bytes32", name: "handle", type: "bytes32" },

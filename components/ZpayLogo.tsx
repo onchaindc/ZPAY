@@ -2,16 +2,16 @@
 
 import Image from "next/image";
 
-type ZamapayLogoProps = {
+type ZpayLogoProps = {
   compact?: boolean;
 };
 
-export default function ZamapayLogo({ compact = false }: ZamapayLogoProps) {
+export default function ZpayLogo({ compact = false }: ZpayLogoProps) {
   return (
     <div className="flex items-center">
       <Image
-        src="/zamapay-logo.jpg"
-        alt="ZAMAPAY"
+        src="/zpay-logo.png"
+        alt="ZPAY"
         width={1200}
         height={1200}
         priority={compact}

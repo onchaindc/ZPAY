@@ -93,7 +93,7 @@ export function formatEthAmount(value: bigint | string) {
   return formatted.replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
 }
 
-// ZamaPay's _balances is an euint64 of raw tokens: no decimals. Vault methods
+// ZPAY's _balances is an euint64 of raw tokens: no decimals. Vault methods
 // operate in these whole units, so the UI must too. Parsing as ETH (18 decimals)
 // would inflate amounts by 1e20 and silently overflow uint64.
 export function parseTokenAmount(value: string): bigint | null {

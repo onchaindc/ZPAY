@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { connectWallet, getSelectedContractAddress, getZamapayContract, truncateAddress } from "@/lib/contract";
+import { connectWallet, getSelectedContractAddress, getVaultContract, truncateAddress } from "@/lib/contract";
 import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ReceiptsList from "@/components/ReceiptsList";
@@ -30,7 +30,7 @@ export default function ReceiptsPage() {
 
     try {
       const wallet = await connectWallet();
-      const contract = getZamapayContract(wallet.signer);
+      const contract = getVaultContract(wallet.signer);
       const contractAddress = getSelectedContractAddress();
       const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
       const tx = await contract.unshield(encryptedAmount.encryptedAmount, encryptedAmount.inputProof);
@@ -57,7 +57,7 @@ export default function ReceiptsPage() {
             Receipt history.
           </h1>
           <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-zinc-400 md:mt-3 md:text-base">
-            Review real ZamapayVault events, including shields, transfers, withdrawal requests, and completed unshields.
+            Review real vault events, including shields, transfers, withdrawal requests, and completed unshields.
           </p>
         </div>
       </div>

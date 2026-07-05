@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { connectWallet, getConnectedNetworkName, getSelectedContractAddress, getZamapayContract } from "@/lib/contract";
+import { connectWallet, getConnectedNetworkName, getSelectedContractAddress, getVaultContract } from "@/lib/contract";
 import { userDecryptBalanceHandle } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
@@ -63,7 +63,7 @@ export default function BalanceCard() {
 
     try {
       const wallet = await connectWallet();
-      const contract = getZamapayContract(wallet.signer);
+      const contract = getVaultContract(wallet.signer);
       const contractAddress = getSelectedContractAddress();
       const userAddress = await wallet.signer.getAddress();
       const handle = await contract.balanceOf(userAddress);

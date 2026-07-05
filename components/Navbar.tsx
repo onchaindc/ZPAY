@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import ConnectButton from "@/components/ConnectButton";
 import NetworkSelector from "@/components/NetworkSelector";
 import ThemeControl from "@/components/ThemeControl";
-import ZamapayLogo from "@/components/ZamapayLogo";
+import ZpayLogo from "@/components/ZpayLogo";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -43,8 +43,8 @@ export default function Navbar() {
   return (
     <header className="app-topbar">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 md:hidden">
-        <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
-          <ZamapayLogo compact />
+        <Link href="/" aria-label="ZPAY home" className="navbar-brand">
+          <ZpayLogo compact />
         </Link>
 
         {showBackButton ? (
@@ -69,8 +69,8 @@ export default function Navbar() {
 
       <div className="navbar-row hidden md:grid">
         <div className="navbar-left">
-          <Link href="/" aria-label="ZAMAPAY home" className="navbar-brand">
-            <ZamapayLogo compact />
+          <Link href="/" aria-label="ZPAY home" className="navbar-brand">
+            <ZpayLogo compact />
           </Link>
 
           {showBackButton ? (

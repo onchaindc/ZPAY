@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ConnectButton from "@/components/ConnectButton";
-import ZamapayLogo from "@/components/ZamapayLogo";
+import ZpayLogo from "@/components/ZpayLogo";
 
 export default function LandingPage() {
   const fullLine = "Confidential payments on Ethereum";
@@ -50,7 +50,7 @@ export default function LandingPage() {
     <main className="grid min-h-[100dvh] w-full max-w-screen place-items-center overflow-x-hidden p-4 md:p-8">
       <section className="welcome-stage flex w-full max-w-xl flex-col items-center justify-center text-center">
         <div className="welcome-logo w-full max-w-[420px]">
-          <ZamapayLogo />
+          <ZpayLogo />
         </div>
 
         <p className="welcome-typing mt-5 min-h-[1.5rem] text-center text-sm font-bold uppercase tracking-[0.24em] text-zama-soft md:min-h-[1.75rem]">

@@ -9,7 +9,7 @@ export default function ActivityPage() {
           Confidential activity.
         </h1>
         <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-zinc-400 md:mt-3 md:text-base">
-          Review shield, transfer, withdrawal request, and completed unshield events from your Zamapay vault.
+          Review shield, transfer, withdrawal request, and completed unshield events from your ZPAY vault.
         </p>
       </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { isAddress } from "ethers";
-import { connectWallet, getSelectedContractAddress, getZamapayContract, truncateAddress } from "@/lib/contract";
+import { connectWallet, getSelectedContractAddress, getVaultContract, truncateAddress } from "@/lib/contract";
 import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
@@ -89,7 +89,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
 
     try {
       const wallet = await connectWallet();
-      const contract = getZamapayContract(wallet.signer);
+      const contract = getVaultContract(wallet.signer);
       const contractAddress = getSelectedContractAddress();
       const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
       const displayAmount = formatTokenAmount(parsedAmount);
@@ -179,7 +179,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
                 <span className="block text-sm font-bold uppercase tracking-[0.18em] text-zama-soft">Receipt history</span>
                 <span className="mt-2 block text-base font-black text-white">On-chain receipts</span>
                 <span className="mt-1 block text-sm leading-6 text-zinc-400">
-                  Confirmed ZamapayVault events are available in Receipts after settlement.
+                  Confirmed vault events are available in Receipts after settlement.
                 </span>
               </span>
               <span className="ml-4 flex h-7 w-12 shrink-0 items-center rounded-full bg-white/12 p-1 transition">

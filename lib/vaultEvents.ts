@@ -1,5 +1,5 @@
 import { BrowserProvider, Contract, EventLog, JsonRpcProvider, formatEther } from "ethers";
-import { ZAMAPAY_ABI } from "@/lib/abi";
+import { VAULT_ABI } from "@/lib/abi";
 import { NETWORKS } from "@/lib/constants";
 import { isConfiguredContractAddress, truncateAddress } from "@/lib/contract";
 import { publicDecryptHandle } from "@/lib/fhevm";
@@ -104,7 +104,7 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
   await walletProvider.send("eth_accounts", []);
 
   const provider = new JsonRpcProvider(SEPOLIA_NETWORK.rpcUrl);
-  const contract = new Contract(contractAddress, ZAMAPAY_ABI, provider);
+  const contract = new Contract(contractAddress, VAULT_ABI, provider);
   const [shieldedLogs, sentLogs, receivedLogs, unshieldRequestedLogs, unshieldedLogs] = await Promise.all([
     contract.queryFilter(contract.filters.Shielded(userAddress)),
     contract.queryFilter(contract.filters.Transferred(userAddress, null)),

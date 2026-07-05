@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { parseEther } from "ethers";
-import { connectWallet, getSelectedContractAddress, getZamapayContract, truncateAddress } from "@/lib/contract";
+import { connectWallet, getSelectedContractAddress, getVaultContract, truncateAddress } from "@/lib/contract";
 import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
@@ -52,7 +52,7 @@ export default function FaucetPage() {
     setToast("Encrypting shield amount locally...");
 
     try {
-      const contract = getZamapayContract(wallet.signer);
+      const contract = getVaultContract(wallet.signer);
       const contractAddress = getSelectedContractAddress();
       const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
       const tx = await contract.shield(encryptedAmount.encryptedAmount, encryptedAmount.inputProof, {
@@ -77,7 +77,7 @@ export default function FaucetPage() {
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Shield Funds</p>
         <h1 className="mt-2 text-[1.85rem] font-black leading-tight text-white md:mt-2 md:text-[2.9rem]">Shield ETH into your vault</h1>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-zinc-400 md:mt-3 md:text-base">
-          Shield funds into ZamaPay&apos;s confidential payment layer. Balances are encrypted with
+          Shield funds into ZPAY&apos;s confidential payment layer. Balances are encrypted with
           Zama FHE and can be used for confidential payments on Ethereum.
         </p>
       </div>

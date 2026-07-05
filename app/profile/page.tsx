@@ -81,13 +81,13 @@ export default function ProfilePage() {
 
     window.ethereum?.on?.("accountsChanged", handleAccountsChanged);
     window.ethereum?.on?.("chainChanged", handleChainChanged);
-    window.addEventListener("zamapay:network", handleChainChanged as EventListener);
+    window.addEventListener("zpay:network", handleChainChanged as EventListener);
 
     return () => {
       active = false;
       window.ethereum?.removeListener?.("accountsChanged", handleAccountsChanged);
       window.ethereum?.removeListener?.("chainChanged", handleChainChanged);
-      window.removeEventListener("zamapay:network", handleChainChanged as EventListener);
+      window.removeEventListener("zpay:network", handleChainChanged as EventListener);
     };
   }, []);
 
@@ -171,10 +171,10 @@ export default function ProfilePage() {
         </section>
 
         <section className="glass rounded-[20px] p-4 md:p-6">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">About Zamapay</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft">About ZPAY</p>
           <h2 className="mt-2 text-xl font-black text-white">Confidential payments on Ethereum</h2>
           <p className="mt-3 text-sm leading-6 text-zinc-400">
-            Zamapay is the confidential payment layer for Ethereum powered by Zama FHE. Shield ETH into your vault,
+            ZPAY is the confidential payment layer for Ethereum powered by Zama FHE. Shield ETH into your vault,
             send confidential payments, and unshield only when you choose to reveal value locally.
           </p>
         </section>

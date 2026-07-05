@@ -1,5 +1,5 @@
 import { BrowserProvider, Contract, JsonRpcSigner } from "ethers";
-import { ZAMAPAY_ABI } from "@/lib/abi";
+import { VAULT_ABI } from "@/lib/abi";
 import {
   DEFAULT_NETWORK,
   NETWORK_STORAGE_KEY,
@@ -37,7 +37,7 @@ export function getSelectedNetworkKey(): NetworkKey {
 
 export function setSelectedNetworkKey(networkKey: NetworkKey) {
   window.localStorage.setItem(NETWORK_STORAGE_KEY, networkKey);
-  window.dispatchEvent(new CustomEvent("zamapay:network", { detail: networkKey }));
+  window.dispatchEvent(new CustomEvent("zpay:network", { detail: networkKey }));
 }
 
 export function getSelectedNetwork() {
@@ -64,10 +64,10 @@ export function assertConfiguredContractAddress() {
 
   if (!isConfiguredContractAddress(network.contractAddress)) {
     throw new Error(
-      `ZAMAPAY contract address is missing for ${network.name}. Set ${
+      `ZPAY contract address is missing for ${network.name}. Set ${
         getSelectedNetworkKey() === "sepolia"
-          ? "NEXT_PUBLIC_ZAMAPAY_CONTRACT_SEPOLIA"
-          : "NEXT_PUBLIC_ZAMAPAY_CONTRACT_MAINNET"
+          ? "NEXT_PUBLIC_ZPAY_CONTRACT_SEPOLIA"
+          : "NEXT_PUBLIC_ZPAY_CONTRACT_MAINNET"
       } to the deployed contract address.`
     );
   }
@@ -148,9 +148,9 @@ export async function connectWallet() {
   };
 }
 
-export function getZamapayContract(signerOrProvider: JsonRpcSigner | BrowserProvider) {
+export function getVaultContract(signerOrProvider: JsonRpcSigner | BrowserProvider) {
   assertConfiguredContractAddress();
-  return new Contract(getSelectedContractAddress(), ZAMAPAY_ABI, signerOrProvider);
+  return new Contract(getSelectedContractAddress(), VAULT_ABI, signerOrProvider);
 }
 
 export async function getConnectedNetworkName() {

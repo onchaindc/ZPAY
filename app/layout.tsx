@@ -3,12 +3,12 @@ import "./globals.css";
 import AppChrome from "@/components/AppChrome";
 
 export const metadata: Metadata = {
-  title: "ZAMAPAY",
+  title: "ZPAY",
   description: "Confidential payments on Ethereum powered by Zama FHE.",
   icons: {
-    icon: "/zamapay-logo.jpg",
-    shortcut: "/zamapay-logo.jpg",
-    apple: "/zamapay-logo.jpg"
+    icon: "/zpay-logo.png",
+    shortcut: "/zpay-logo.png",
+    apple: "/zpay-logo.png"
   }
 };
 

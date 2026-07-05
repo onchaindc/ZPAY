@@ -9,7 +9,7 @@ type ThemeControlProps = {
   variant?: "floating" | "inline";
 };
 
-const THEME_STORAGE_KEY = "zamapay:theme";
+const THEME_STORAGE_KEY = "zpay:theme";
 
 export default function ThemeControl({ landing = false, variant = "floating" }: ThemeControlProps) {
   const [theme, setTheme] = useState<ThemeMode>("dark");

@@ -43,13 +43,13 @@ export default function ActivityList() {
 
     window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
     window.ethereum?.on?.("chainChanged", handleWalletStateChange);
-    window.addEventListener("zamapay:network", handleWalletStateChange as EventListener);
+    window.addEventListener("zpay:network", handleWalletStateChange as EventListener);
 
     return () => {
       active = false;
       window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
       window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
-      window.removeEventListener("zamapay:network", handleWalletStateChange as EventListener);
+      window.removeEventListener("zpay:network", handleWalletStateChange as EventListener);
     };
   }, []);
 
@@ -97,7 +97,7 @@ export default function ActivityList() {
           </div>
           <p className="mt-4 font-black text-white">No vault events found</p>
           <p className="mt-2 text-sm text-zinc-400">
-            Connect the wallet that used ZamapayVault on Sepolia to load shield, transfer, and unshield activity.
+            Connect the wallet that used this vault on Sepolia to load shield, transfer, and unshield activity.
           </p>
         </div>
       )}

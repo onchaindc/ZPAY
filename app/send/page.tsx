@@ -2,8 +2,8 @@ import SendForm from "@/components/SendForm";
 
 export default function SendPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 pb-24 pt-4 md:px-8 md:pb-8 md:pt-5">
-      <div className="mx-auto mb-5 max-w-3xl text-center md:mb-6">
+    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 pb-20 pt-3 md:px-8 md:pb-5 md:pt-4">
+      <div className="mx-auto mb-4 max-w-3xl text-center md:mb-4">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Confidential Payment</p>
         <h1 className="mt-2 text-[1.85rem] font-black leading-tight text-white md:mt-2 md:text-[2.9rem]">
           Send a confidential payment.

@@ -74,8 +74,8 @@ export default function FaucetPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[640px] overflow-x-hidden px-4 pb-24 pt-4 md:px-8 md:pb-8 md:pt-5">
-      <div className="mx-auto mb-5 max-w-[640px] text-center md:mb-6">
+    <main className="mx-auto w-full max-w-[640px] overflow-x-hidden px-4 pb-20 pt-3 md:px-8 md:pb-5 md:pt-4">
+      <div className="mx-auto mb-4 max-w-[640px] text-center md:mb-4">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Shield Funds</p>
         <h1 className="mt-2 text-[1.85rem] font-black leading-tight text-white md:mt-2 md:text-[2.9rem]">Shield ETH into your vault</h1>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-zinc-400 md:mt-3 md:text-base">

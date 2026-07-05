@@ -169,7 +169,7 @@ export default function ReceiptsList() {
   }, []);
 
   return (
-    <section className="activity-surface mx-auto w-full">
+    <section className="activity-surface mx-auto w-full md:flex md:min-h-0 md:flex-1 md:flex-col">
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Receipts</p>
@@ -188,7 +188,7 @@ export default function ReceiptsList() {
       ) : null}
 
       {loading ? (
-        <div className="grid gap-3">
+        <div className="grid gap-3 md:min-h-0 md:flex-1 md:overflow-y-auto md:pr-1">
           {Array.from({ length: 3 }).map((_, index) => (
             <div key={index} className="activity-skeleton-card">
               <div className="activity-timeline-marker" aria-hidden="true" />
@@ -201,13 +201,13 @@ export default function ReceiptsList() {
           ))}
         </div>
       ) : receipts.length ? (
-        <div className="activity-timeline grid gap-3">
+        <div className="activity-timeline grid gap-3 md:min-h-0 md:flex-1 md:overflow-y-auto md:pr-1">
           {receipts.map((item) => (
             <ReceiptCard key={item.id} item={item} />
           ))}
         </div>
       ) : (
-        <div className="activity-empty-state px-4 py-10 text-center md:px-6">
+        <div className="activity-empty-state px-4 py-10 text-center md:min-h-0 md:flex-1 md:px-6">
           <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-zama-gold/20 bg-zama-gold/10 text-zama-gold">
             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-hidden="true">
               <path d="M7 3h10a2 2 0 0 1 2 2v16l-3-1.8-2 1.2-2-1.2-2 1.2-2-1.2L5 21V5a2 2 0 0 1 2-2Zm2 6h6V7H9v2Zm0 4h6v-2H9v2Zm0 4h4v-2H9v2Z" />

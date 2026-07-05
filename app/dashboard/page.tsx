@@ -37,8 +37,8 @@ const quickActions = [
 
 export default function DashboardPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 pb-24 pt-4 md:px-8 md:pb-8 md:pt-5">
-      <div className="mx-auto mb-5 max-w-3xl text-center md:mb-6">
+    <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 pb-20 pt-3 md:flex md:h-[calc(100dvh-5.5rem)] md:flex-col md:overflow-hidden md:px-8 md:pb-5 md:pt-4">
+      <div className="mx-auto mb-4 max-w-3xl text-center md:mb-4">
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Powered by Zama FHE</p>
         <h1 className="mt-2 text-[1.85rem] font-black leading-tight text-white md:mt-2 md:text-[2.9rem]">
           Your confidential balance.
@@ -48,7 +48,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:gap-6 lg:gap-7">
+      <div className="grid gap-4 md:min-h-0 md:flex-1 md:overflow-hidden md:gap-4">
         <BalanceCard />
 
         <section aria-labelledby="quick-actions-title" className="grid gap-4">

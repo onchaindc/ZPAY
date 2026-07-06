@@ -8,18 +8,52 @@ import {
   toHexChainId
 } from "@/lib/constants";
 
+export type InjectedEthereumProvider = {
+  request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+  on?: (event: string, handler: (...args: unknown[]) => void) => void;
+  removeListener?: (event: string, handler: (...args: unknown[]) => void) => void;
+  providers?: InjectedEthereumProvider[];
+  selectedAddress?: string;
+  isConnected?: () => boolean;
+};
+
 declare global {
   interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-      on?: (event: string, handler: (...args: unknown[]) => void) => void;
-      removeListener?: (event: string, handler: (...args: unknown[]) => void) => void;
-    };
+    ethereum?: InjectedEthereumProvider;
   }
 }
 
-export function hasMetaMask() {
-  return typeof window !== "undefined" && Boolean(window.ethereum);
+export function getInjectedProvider() {
+  if (typeof window === "undefined" || !window.ethereum) {
+    return null;
+  }
+
+  const rootProvider = window.ethereum;
+  const nestedProviders = Array.isArray(rootProvider.providers) ? rootProvider.providers.filter(Boolean) : [];
+
+  if (!nestedProviders.length) {
+    return rootProvider;
+  }
+
+  return (
+    nestedProviders.find((provider) => typeof provider.selectedAddress === "string" && provider.selectedAddress.length > 0) ??
+    nestedProviders.find((provider) => {
+      try {
+        return typeof provider.isConnected === "function" && provider.isConnected();
+      } catch {
+        return false;
+      }
+    }) ??
+    rootProvider
+  );
+}
+
+export function hasInjectedWallet() {
+  return Boolean(getInjectedProvider());
+}
+
+export function getWalletUnavailableMessage() {
+  return "No compatible wallet detected. Open any injected Ethereum wallet to continue.";
 }
 
 export function truncateAddress(address: string) {
@@ -74,15 +108,17 @@ export function assertConfiguredContractAddress() {
 }
 
 export async function switchToNetwork(networkKey: NetworkKey) {
-  if (!window.ethereum) {
-    throw new Error("MetaMask is required.");
+  const walletProvider = getInjectedProvider();
+
+  if (!walletProvider) {
+    throw new Error(getWalletUnavailableMessage());
   }
 
   const network = NETWORKS[networkKey];
   const chainId = toHexChainId(network.chainId);
 
   try {
-    await window.ethereum.request({
+    await walletProvider.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId }]
     });
@@ -93,7 +129,7 @@ export async function switchToNetwork(networkKey: NetworkKey) {
       throw error;
     }
 
-    await window.ethereum.request({
+    await walletProvider.request({
       method: "wallet_addEthereumChain",
       params: [
         {
@@ -111,11 +147,13 @@ export async function switchToNetwork(networkKey: NetworkKey) {
 }
 
 export async function getBrowserProvider() {
-  if (!window.ethereum) {
-    throw new Error("MetaMask is required.");
+  const walletProvider = getInjectedProvider();
+
+  if (!walletProvider) {
+    throw new Error(getWalletUnavailableMessage());
   }
 
-  const provider = new BrowserProvider(window.ethereum);
+  const provider = new BrowserProvider(walletProvider);
   const network = await provider.getNetwork();
   const selectedNetworkKey = getSelectedNetworkKey();
   const selectedNetwork = getSelectedNetwork();
@@ -124,7 +162,7 @@ export async function getBrowserProvider() {
     await switchToNetwork(selectedNetworkKey);
   }
 
-  return new BrowserProvider(window.ethereum);
+  return new BrowserProvider(walletProvider);
 }
 
 export async function connectWallet() {
@@ -145,11 +183,13 @@ export function getVaultContract(signerOrProvider: JsonRpcSigner | BrowserProvid
 }
 
 export async function getConnectedNetworkName() {
-  if (!window.ethereum) {
+  const walletProvider = getInjectedProvider();
+
+  if (!walletProvider) {
     return getSelectedNetwork().name;
   }
 
-  const provider = new BrowserProvider(window.ethereum);
+  const provider = new BrowserProvider(walletProvider);
   const network = await provider.getNetwork();
   const matchedKey = getNetworkKeyForChainId(network.chainId);
 

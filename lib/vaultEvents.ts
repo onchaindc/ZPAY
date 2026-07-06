@@ -1,6 +1,6 @@
 import { BrowserProvider, Contract, EventLog, JsonRpcProvider, formatEther } from "ethers";
 import { VAULT_ABI } from "@/lib/abi";
-import { isConfiguredContractAddress, getSelectedNetwork, truncateAddress } from "@/lib/contract";
+import { getInjectedProvider, isConfiguredContractAddress, getSelectedNetwork, truncateAddress } from "@/lib/contract";
 import { publicDecryptHandle } from "@/lib/fhevm";
 import { formatTokenAmount } from "@/lib/ui";
 
@@ -74,7 +74,8 @@ function normalizeClearValue(value: unknown) {
 }
 
 async function getConnectedAddress() {
-  const accounts = (await window.ethereum?.request?.({ method: "eth_accounts" })) as string[] | undefined;
+  const walletProvider = getInjectedProvider();
+  const accounts = (await walletProvider?.request?.({ method: "eth_accounts" })) as string[] | undefined;
   return accounts?.[0] ?? "";
 }
 
@@ -412,7 +413,9 @@ function deriveCounterparty(event: RawVaultEvent, currentUser: string) {
 }
 
 export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[]> {
-  if (typeof window === "undefined" || !window.ethereum) {
+  const injectedProvider = getInjectedProvider();
+
+  if (typeof window === "undefined" || !injectedProvider) {
     return [];
   }
 
@@ -430,7 +433,7 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
 
   const cacheKey = getVaultEventsCacheKey(userAddress, selectedNetwork.chainId, contractAddress);
 
-  const walletProvider = new BrowserProvider(window.ethereum);
+  const walletProvider = new BrowserProvider(injectedProvider);
   await walletProvider.send("eth_accounts", []);
 
   let lastError: unknown;
@@ -452,7 +455,7 @@ export async function loadVaultEventsForConnectedUser(): Promise<VaultEventItem[
 }
 
 export async function loadCachedVaultEventsForConnectedUser() {
-  if (typeof window === "undefined" || !window.ethereum) {
+  if (typeof window === "undefined" || !getInjectedProvider()) {
     return null;
   }
 
@@ -471,7 +474,7 @@ export async function loadCachedVaultEventsForConnectedUser() {
 }
 
 export async function subscribeToVaultEventsForConnectedUser(onChange: () => void) {
-  if (typeof window === "undefined" || !window.ethereum) {
+  if (typeof window === "undefined" || !getInjectedProvider()) {
     return () => undefined;
   }
 

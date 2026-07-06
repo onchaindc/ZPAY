@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { connectWallet, hasMetaMask, truncateAddress } from "@/lib/contract";
+import { connectWallet, getInjectedProvider, getWalletUnavailableMessage, hasInjectedWallet, truncateAddress } from "@/lib/contract";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
 import { getFriendlyErrorMessage } from "@/lib/ui";
@@ -17,12 +17,14 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!hasMetaMask()) {
+    const walletProvider = getInjectedProvider();
+
+    if (!walletProvider || !hasInjectedWallet()) {
       return;
     }
 
-    window.ethereum
-      ?.request({ method: "eth_accounts" })
+    walletProvider
+      .request({ method: "eth_accounts" })
       .then((accounts) => {
         const [account] = accounts as string[];
         if (account) {
@@ -41,18 +43,18 @@ export default function ConnectButton({ compact = false, onConnected }: ConnectB
       }
     };
 
-    window.ethereum?.on?.("accountsChanged", handleAccountsChanged);
+    walletProvider.on?.("accountsChanged", handleAccountsChanged);
 
     return () => {
-      window.ethereum?.removeListener?.("accountsChanged", handleAccountsChanged);
+      walletProvider.removeListener?.("accountsChanged", handleAccountsChanged);
     };
   }, [onConnected]);
 
   async function handleConnect() {
     setError("");
 
-    if (!hasMetaMask()) {
-      setError("MetaMask is required.");
+    if (!hasInjectedWallet()) {
+      setError(getWalletUnavailableMessage());
       return;
     }
 

@@ -3,7 +3,7 @@
 import { BrowserProvider } from "ethers";
 import { useEffect, useState } from "react";
 import { DEFAULT_NETWORK, NETWORKS, NetworkKey } from "@/lib/constants";
-import { getNetworkKeyForChainId, getSelectedNetworkKey, setSelectedNetworkKey, switchToNetwork } from "@/lib/contract";
+import { getInjectedProvider, getNetworkKeyForChainId, getSelectedNetworkKey, setSelectedNetworkKey, switchToNetwork } from "@/lib/contract";
 import { resetInstance } from "@/lib/fhevm";
 
 export default function NetworkSelector() {
@@ -14,7 +14,9 @@ export default function NetworkSelector() {
     let mounted = true;
 
     async function syncNetworkFromWallet() {
-      if (!window.ethereum) {
+      const walletProvider = getInjectedProvider();
+
+      if (!walletProvider) {
         if (mounted) {
           setNetworkKey(getSelectedNetworkKey());
         }
@@ -26,7 +28,7 @@ export default function NetworkSelector() {
         setNetworkKey(selectedKey);
       }
 
-      const provider = new BrowserProvider(window.ethereum);
+      const provider = new BrowserProvider(walletProvider);
       const network = await provider.getNetwork();
       const walletKey = getNetworkKeyForChainId(network.chainId);
 
@@ -42,11 +44,12 @@ export default function NetworkSelector() {
       resetInstance();
     };
 
-    window.ethereum?.on?.("chainChanged", handleChainChanged);
+    const walletProvider = getInjectedProvider();
+    walletProvider?.on?.("chainChanged", handleChainChanged);
 
     return () => {
       mounted = false;
-      window.ethereum?.removeListener?.("chainChanged", handleChainChanged);
+      walletProvider?.removeListener?.("chainChanged", handleChainChanged);
     };
   }, []);
 

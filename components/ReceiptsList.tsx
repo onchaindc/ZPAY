@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Toast from "@/components/Toast";
-import { truncateAddress } from "@/lib/contract";
+import { getInjectedProvider, truncateAddress } from "@/lib/contract";
 import { formatRelativeTime, getFriendlyErrorMessage } from "@/lib/ui";
 import {
   loadCachedVaultEventsForConnectedUser,
@@ -165,16 +165,17 @@ export default function ReceiptsList() {
       void loadReceipts();
     };
 
-    window.ethereum?.on?.("accountsChanged", handleWalletStateChange);
-    window.ethereum?.on?.("chainChanged", handleWalletStateChange);
+    const walletProvider = getInjectedProvider();
+    walletProvider?.on?.("accountsChanged", handleWalletStateChange);
+    walletProvider?.on?.("chainChanged", handleWalletStateChange);
     window.addEventListener("zpay:network", handleWalletStateChange as EventListener);
     window.addEventListener(VAULT_ACTIVITY_EVENT, handleActivityChange as EventListener);
 
     return () => {
       active = false;
       unsubscribe?.();
-      window.ethereum?.removeListener?.("accountsChanged", handleWalletStateChange);
-      window.ethereum?.removeListener?.("chainChanged", handleWalletStateChange);
+      walletProvider?.removeListener?.("accountsChanged", handleWalletStateChange);
+      walletProvider?.removeListener?.("chainChanged", handleWalletStateChange);
       window.removeEventListener("zpay:network", handleWalletStateChange as EventListener);
       window.removeEventListener(VAULT_ACTIVITY_EVENT, handleActivityChange as EventListener);
     };

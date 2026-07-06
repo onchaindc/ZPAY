@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ConnectButton from "@/components/ConnectButton";
 import NetworkSelector from "@/components/NetworkSelector";
 import ThemeControl from "@/components/ThemeControl";
-import { getConnectedNetworkName, hasMetaMask, truncateAddress } from "@/lib/contract";
+import { getConnectedNetworkName, getInjectedProvider, hasInjectedWallet, truncateAddress } from "@/lib/contract";
 
 const shortcuts = [
   {
@@ -20,7 +20,7 @@ const shortcuts = [
   },
   {
     href: "/faucet",
-    title: "Faucet",
+    title: "Shield",
     description: "Shield ETH into the vault and keep payment value encrypted.",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 fill-current">
@@ -49,7 +49,9 @@ export default function ProfilePage() {
         }
       }
 
-      if (!hasMetaMask()) {
+      const walletProvider = getInjectedProvider();
+
+      if (!walletProvider || !hasInjectedWallet()) {
         if (active) {
           setAddress("");
         }
@@ -57,7 +59,7 @@ export default function ProfilePage() {
       }
 
       try {
-        const accounts = (await window.ethereum?.request({ method: "eth_accounts" })) as string[] | undefined;
+        const accounts = (await walletProvider.request({ method: "eth_accounts" })) as string[] | undefined;
         if (active) {
           setAddress(accounts?.[0] ?? "");
         }
@@ -79,14 +81,15 @@ export default function ProfilePage() {
       void syncWalletState();
     };
 
-    window.ethereum?.on?.("accountsChanged", handleAccountsChanged);
-    window.ethereum?.on?.("chainChanged", handleChainChanged);
+    const walletProvider = getInjectedProvider();
+    walletProvider?.on?.("accountsChanged", handleAccountsChanged);
+    walletProvider?.on?.("chainChanged", handleChainChanged);
     window.addEventListener("zpay:network", handleChainChanged as EventListener);
 
     return () => {
       active = false;
-      window.ethereum?.removeListener?.("accountsChanged", handleAccountsChanged);
-      window.ethereum?.removeListener?.("chainChanged", handleChainChanged);
+      walletProvider?.removeListener?.("accountsChanged", handleAccountsChanged);
+      walletProvider?.removeListener?.("chainChanged", handleChainChanged);
       window.removeEventListener("zpay:network", handleChainChanged as EventListener);
     };
   }, []);

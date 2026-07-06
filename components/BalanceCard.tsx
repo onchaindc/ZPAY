@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { connectWallet, getSelectedContractAddress, getSelectedNetwork, getVaultContract } from "@/lib/contract";
+import { connectWallet, getInjectedProvider, getSelectedContractAddress, getSelectedNetwork, getVaultContract } from "@/lib/contract";
 import { userDecryptBalanceHandle } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
@@ -39,12 +39,13 @@ export default function BalanceCard() {
       syncNetworkName();
     };
 
-    window.ethereum?.on?.("chainChanged", handleChainChanged);
+    const walletProvider = getInjectedProvider();
+    walletProvider?.on?.("chainChanged", handleChainChanged);
     window.addEventListener("zpay:network", handleChainChanged as EventListener);
 
     return () => {
       active = false;
-      window.ethereum?.removeListener?.("chainChanged", handleChainChanged);
+      walletProvider?.removeListener?.("chainChanged", handleChainChanged);
       window.removeEventListener("zpay:network", handleChainChanged as EventListener);
     };
   }, []);

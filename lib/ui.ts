@@ -92,6 +92,15 @@ export function formatEthAmount(value: bigint | string) {
     return formatted;
   }
 
+  const rounded = Number.parseFloat(formatted);
+  if (Number.isFinite(rounded)) {
+    return rounded.toLocaleString("en-US", {
+      useGrouping: false,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 6
+    });
+  }
+
   return formatted.replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
 }
 

@@ -21,7 +21,7 @@ export default function ReceiptsPage() {
 
     const parsedAmount = parseTokenAmount(amount);
     if (!parsedAmount) {
-      setToast("Enter a whole ETH amount greater than zero.");
+      setToast("Enter an ETH amount greater than zero.");
       setTone("error");
       return;
     }
@@ -82,8 +82,8 @@ export default function ReceiptsPage() {
               <input
                 value={amount}
                 onChange={(event) => setAmount(event.target.value)}
-                inputMode="numeric"
-                placeholder="25"
+                inputMode="decimal"
+                placeholder="0.25"
                 className="input-field"
               />
             </label>

@@ -39,9 +39,9 @@ export default function SendForm({ compact = false }: SendFormProps) {
       ? "Enter a valid wallet address."
       : "";
   const amountError = amountTouched && !amount.trim()
-    ? "Enter the amount to encrypt."
+    ? "Enter the amount to send."
     : amountTouched && !amountValid
-      ? "Use a whole amount greater than zero."
+      ? "Enter an ETH amount greater than zero."
       : "";
 
   const primaryActionLabel = loading ? "Processing confidential payment" : "Send confidential payment";
@@ -80,7 +80,7 @@ export default function SendForm({ compact = false }: SendFormProps) {
     }
 
     if (!parsedAmount) {
-      setToast("Enter a whole amount greater than zero.");
+      setToast("Enter an ETH amount greater than zero.");
       setTone("error");
       return;
     }
@@ -164,13 +164,13 @@ export default function SendForm({ compact = false }: SendFormProps) {
                     value={amount}
                     onChange={(event) => updateAmount(event.target.value)}
                     onBlur={() => setAmountTouched(true)}
-                    inputMode="numeric"
-                    placeholder="25"
+                    inputMode="decimal"
+                    placeholder="0.25"
                     className={`input-field ${amountError ? "input-field-error" : ""}`}
                     aria-invalid={amountError ? true : false}
                   />
                   <span className={`text-xs ${amountError ? "text-rose-300" : "text-zinc-500"}`}>
-                    {amountError || "Whole confidential balance units only."}
+                    {amountError || "The amount is encrypted automatically before submission."}
                   </span>
                 </label>
               </div>

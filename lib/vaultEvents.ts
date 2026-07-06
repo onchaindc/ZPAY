@@ -2,6 +2,7 @@ import { BrowserProvider, Contract, EventLog, JsonRpcProvider, formatEther } fro
 import { VAULT_ABI } from "@/lib/abi";
 import { isConfiguredContractAddress, getSelectedNetwork, truncateAddress } from "@/lib/contract";
 import { publicDecryptHandle } from "@/lib/fhevm";
+import { formatTokenAmount } from "@/lib/ui";
 
 export const VAULT_ACTIVITY_EVENT = "zpay:activity";
 const VAULT_EVENTS_CACHE_PREFIX = "zpay:vault-events";
@@ -276,7 +277,7 @@ async function loadVaultEventsFromRpc(rpcUrl: string, userAddress: string, selec
     try {
       const clearValue = normalizeClearValue(await publicDecryptHandle(amountHandle));
       if (clearValue !== null) {
-        amountLabel = clearValue.toString();
+        amountLabel = formatTokenAmount(clearValue);
       }
     } catch {
       amountLabel = "Encrypted";

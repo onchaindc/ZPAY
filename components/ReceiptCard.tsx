@@ -5,7 +5,7 @@ import { userDecryptHandle } from "@/lib/fhevm";
 import { connectWallet, getSelectedContractAddress, truncateAddress } from "@/lib/contract";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import { getFriendlyErrorMessage } from "@/lib/ui";
+import { formatTokenAmount, getFriendlyErrorMessage } from "@/lib/ui";
 
 export type ReceiptView = {
   id: string;
@@ -43,7 +43,7 @@ export default function ReceiptCard({ receipt }: ReceiptCardProps) {
         return;
       }
 
-      setAmount(decrypted);
+      setAmount(formatTokenAmount(decrypted));
       setToast("");
       setTone("idle");
     } catch (error) {

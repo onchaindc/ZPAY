@@ -5,14 +5,14 @@ import { connectWallet, getSelectedContractAddress, getSelectedNetwork, getVault
 import { userDecryptBalanceHandle } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import { getFriendlyErrorMessage } from "@/lib/ui";
+import { formatTokenAmount, getFriendlyErrorMessage } from "@/lib/ui";
 
 // Sentinel values the relayer can return when decryption isn't possible
 // (ACL not granted, ciphertext not yet available, etc.). We treat any value
 // above the sanity ceiling as "not a real balance" rather than pretending a
 // successful reveal.
 const MAX_UINT64 = BigInt("18446744073709551615");
-const DECRYPTION_UPPER_BOUND = BigInt("1000000000000");
+const DECRYPTION_UPPER_BOUND = MAX_UINT64 - BigInt(1);
 
 type RevealState = "idle" | "real" | "empty" | "pending" | "unavailable";
 
@@ -88,7 +88,7 @@ export default function BalanceCard() {
         return;
       }
 
-      setBalance(asBigInt.toString());
+      setBalance(formatTokenAmount(asBigInt));
       setRevealState("real");
     } catch (error) {
       setBalance("");

@@ -1,5 +1,7 @@
 import { formatEther, parseEther } from "ethers";
 
+const MAX_CONFIDENTIAL_AMOUNT = BigInt("18446744073709551615");
+
 export function getFriendlyErrorMessage(
   error: unknown,
   fallback: "network" | "contract" | "balance" | "generic" = "generic"
@@ -93,23 +95,17 @@ export function formatEthAmount(value: bigint | string) {
   return formatted.replace(/(\.\d*?[1-9])0+$|\.0+$/, "$1");
 }
 
-// ZPAY's _balances is an euint64 of raw tokens: no decimals. Vault methods
-// operate in these whole units, so the UI must too. Parsing as ETH (18 decimals)
-// would inflate amounts by 1e20 and silently overflow uint64.
 export function parseTokenAmount(value: string): bigint | null {
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  try {
-    const asBigInt = BigInt(Math.floor(Number(trimmed)));
-    return asBigInt > BigInt(0) ? asBigInt : null;
-  } catch {
+  const parsed = parseEthAmount(value);
+  if (parsed === null) {
     return null;
   }
+
+  return parsed <= MAX_CONFIDENTIAL_AMOUNT ? parsed : null;
 }
 
 export function formatTokenAmount(value: bigint | string) {
-  const normalized = typeof value === "string" ? BigInt(value) : value;
-  return normalized.toString();
+  return formatEthAmount(value);
 }
 
 export function formatRelativeTime(unixTimestamp: number) {

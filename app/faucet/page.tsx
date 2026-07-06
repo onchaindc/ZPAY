@@ -1,17 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { parseEther } from "ethers";
 import { connectWallet, getSelectedContractAddress, getVaultContract, truncateAddress } from "@/lib/contract";
 import { encryptAmount64 } from "@/lib/fhevm";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import { getFriendlyErrorMessage, parseTokenAmount } from "@/lib/ui";
+import { formatTokenAmount, getFriendlyErrorMessage, parseTokenAmount } from "@/lib/ui";
 import { notifyVaultActivityChanged } from "@/lib/vaultEvents";
 
 export default function FaucetPage() {
-  const [amount, setAmount] = useState("100");
-  const [ethAmount, setEthAmount] = useState("0.001");
+  const [amount, setAmount] = useState("0.001");
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState("");
   const [tone, setTone] = useState<"idle" | "success" | "error">("idle");
@@ -29,21 +27,6 @@ export default function FaucetPage() {
 
     const parsedAmount = parseTokenAmount(amount);
     if (!parsedAmount) {
-      setToast("Enter a whole ETH amount greater than zero.");
-      setTone("error");
-      return;
-    }
-
-    let ethValue: bigint;
-    try {
-      ethValue = parseEther(ethAmount || "0");
-    } catch {
-      setToast("Enter a valid ETH amount to lock.");
-      setTone("error");
-      return;
-    }
-
-    if (ethValue <= BigInt(0)) {
       setToast("Enter an ETH amount greater than zero.");
       setTone("error");
       return;
@@ -57,13 +40,13 @@ export default function FaucetPage() {
       const contractAddress = getSelectedContractAddress();
       const encryptedAmount = await encryptAmount64(contractAddress, wallet.address, parsedAmount.toString());
       const tx = await contract.shield(encryptedAmount.encryptedAmount, encryptedAmount.inputProof, {
-        value: ethValue
+        value: parsedAmount
       });
 
       setToast(`Shield transaction submitted: ${truncateAddress(tx.hash)}`);
       await tx.wait();
       notifyVaultActivityChanged();
-      setToast(`Shielded ${amount} confidential ETH to ${truncateAddress(wallet.address)}.`);
+      setToast(`Shielded ${formatTokenAmount(parsedAmount)} ETH into your confidential balance.`);
       setTone("success");
     } catch (error) {
       setToast(getFriendlyErrorMessage(error, "contract"));
@@ -79,29 +62,17 @@ export default function FaucetPage() {
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-zama-soft md:text-sm">Shield Funds</p>
         <h1 className="mt-2 text-[1.85rem] font-black leading-tight text-white md:mt-2 md:text-[2.9rem]">Shield ETH into your vault</h1>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-zinc-400 md:mt-3 md:text-base">
-          Shield funds into ZPAY&apos;s confidential payment layer. Balances are encrypted with
-          Zama FHE and can be used for confidential payments on Ethereum.
+          Shielding locks your ETH in the vault and converts it into a confidential encrypted balance.
         </p>
       </div>
 
       <section className="glass mx-auto w-full rounded-xl p-4 md:p-6">
         <div className="grid gap-5">
           <label className="grid gap-2 text-sm font-semibold text-white">
-            Confidential ETH amount
+            Amount to Shield (ETH)
             <input
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
-              inputMode="numeric"
-              placeholder="100"
-              className="input-field"
-            />
-          </label>
-
-          <label className="grid gap-2 text-sm font-semibold text-white">
-            ETH to lock
-            <input
-              value={ethAmount}
-              onChange={(event) => setEthAmount(event.target.value)}
               inputMode="decimal"
               placeholder="0.001"
               className="input-field"

@@ -119,19 +119,5 @@ npm run test
 
 Note: this repository currently contains the ZPAY frontend package. The contract workflow commands above belong to the Solidity/Hardhat portion of the project and should be run from that workspace when present.
 
-## 🌍 Deployment
-
-- Frontend deployed on Vercel
-- Smart contract deployed on Sepolia
-- Confidential execution powered by Zama FHEVM
-
-## 🧹 Repository Cleanup
-
-- Removed leftover Zamapay branding in favor of ZPAY
-- Removed template-style README wording and boilerplate copy
-- Removed obsolete logo references and aligned branding assets
-- Preserved existing functionality while updating presentation and documentation
-
-## 🏁 Hackathon Submission Summary
 
 ZPAY is a practical showcase of confidential payments on Ethereum. It demonstrates how users can shield value, manage encrypted balances, transfer funds privately, and unshield assets through a wallet-first experience powered by Zama FHEVM.
